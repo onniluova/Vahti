@@ -30,7 +30,7 @@ def get_users():
         conn = get_db_connection()
         cur = conn.cursor(cursor_factory=RealDictCursor)
 
-        cur.execute('SELECT id, username, role FROM user;')
+        cur.execute('SELECT id, username, role FROM users;')
         users = cur.fetchall()
 
         cur.close()
@@ -77,14 +77,15 @@ def login():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    query = ("SELECT password FROM users WHERE username = %s;", (u_name, ))
-    result = cur.fetchone()
+    query = ("SELECT id, password, role FROM users WHERE username = %s;")
+    cur.execute(query, (u_name,))
+    user = cur.fetchone()
 
     cur.close()
     conn.close()
 
-    if result:
-        stored_hash = result[0]
+    if user:
+        stored_hash = user[1]
 
         if check_password_hash(stored_hash, u_pass):
             return jsonify({"message": "Login succesfull"}), 200
