@@ -4,6 +4,7 @@ from flask import Flask, jsonify, request
 import psycopg2
 from psycopg2.extras import RealDictCursor
 from werkzeug.security import generate_password_hash, check_password_hash
+from auth import createToken
 
 load_dotenv()
 
@@ -85,10 +86,17 @@ def login():
     conn.close()
 
     if user:
+        user_id = user[0]
         stored_hash = user[1]
+        role = user[2]
 
         if check_password_hash(stored_hash, u_pass):
-            return jsonify({"message": "Login succesfull"}), 200
+            token = createToken(user_id, role)
+
+            return jsonify({
+                "message": "Login successful",
+                "token": token,
+            }), 200
     
     return jsonify({"error": "Invalid username or password"}), 401
 
