@@ -8,6 +8,7 @@ from auth import createToken
 import requests
 import time
 from datetime import datetime, UTC
+from auth import tokenRequired
 
 load_dotenv()
 
@@ -104,12 +105,14 @@ def login():
     return jsonify({"error": "Invalid username or password"}), 401
 
 @app.route('/addEndpoint', methods=['POST'])
-def addEndpoint():
+@tokenRequired
+def addEndpoint(current_user):
     data = request.get_json()
 
-    user_id = data.get("user_id")
     url = data.get('url')
     name = data.get('name')
+
+    user_id = current_user['user_id']
 
     if not user_id or not url:
         return jsonify({"error": "Missing user_id or url"}), 400
@@ -135,7 +138,7 @@ def addEndpoint():
         conn.close()
 
         return jsonify({
-            "message": "Created successfully",
+            "message": "Endpoint created successfully",
             "check_id": check,
         }), 201
 
@@ -143,7 +146,8 @@ def addEndpoint():
         return jsonify({"error": str(e)}), 500
 
 @app.route('/runUrl', methods=['POST'])
-def runUrl():
+@tokenRequired
+def runUrl(current_user):
     data = request.get_json()
 
     url = data.get('url')
@@ -152,20 +156,26 @@ def runUrl():
     if not url or not endpoint_id:
         return jsonify({"error": "Missing url or endpoint_id"}), 400
 
+    conn = None
+
     try:
-        start_time = time.time()
+        conn = get_db_connection()
+        cur = conn.cursor()
 
-        response = requests.get(url, timeout=10)
+        cur.execute('SELECT user_id FROM endpoints WHERE id = %s', (endpoint_id,))
+        endpoint_owner = cur.fetchone()
 
+        if not endpoint_owner or endpoint_id[0] != current_user:
+            return jsonify({"error": "Unauthorized access"}), 403
+        
         # calculating the metrics
+        start_time = time.time()
+        response = requests.get(url, timeout=10)
         end_time = time.time()
         latency_ms = int((end_time - start_time) * 1000)
         status_code = response.status_code
         is_up = 200 <= status_code < 400
         checked_at = datetime.now(UTC)
-
-        conn = get_db_connection()
-        cur = conn.cursor()
 
         query = ("""
         INSERT INTO checks (endpoint_id, status_code, latency_ms, is_up, checked_at)
@@ -187,7 +197,12 @@ def runUrl():
         }), 200
 
     except Exception as e:
+        if conn: conn.rollback()
         return jsonify({"error": str(e)}), 500
+    finally:
+        if conn:
+            cur.close()
+            conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
