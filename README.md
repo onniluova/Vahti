@@ -36,7 +36,7 @@ DB_PASSWORD=password
 SECRET_KEY=somesecretkey
 ```
 
-### Database Setup
+### 4. Database Setup
 You'll need to create the tables manually for now (I haven't added migrations yet, will add later).
 ```
 users (id, username, password, role)
@@ -46,7 +46,7 @@ endpoints (id, user_id, url, name)
 checks (id, endpoint_id, status_code, latency_ms, is_up, checked_at)
 ```
 
-5. Run the server
+### 5. Run the server
 Bash
 
 python app.py
