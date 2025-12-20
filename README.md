@@ -52,7 +52,8 @@ Bash
 python app.py
 
 It runs on http://localhost:5000.
-API Routes
+
+# API Routes
 
 ### Auth
 
