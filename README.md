@@ -1,89 +1,152 @@
-# APIShield - Uptime Monitor Backend
+# APIShield - Full Stack Uptime Monitor
 
-This is the backend for a custom API monitoring tool I'm building. It's basically a lightweight alternative to things like Uptime Kuma or Postman, but with some custom features like latency anomaly detection.
+This is a custom API monitoring tool I'm building. It's basically a lightweight alternative to things like Uptime Kuma or Postman, but with some custom features I wanted, like latency anomaly detection.
 
-Built with Python (Flask) and PostgreSQL.
+The goal is to have a clean dashboard where I can track my API endpoints and get flagged if they start responding slower than usual.
+
+## Tech Stack
+* **Backend:** Python (Flask) using a proper MVC structure.
+* **Frontend:** React + Vite (because it's fast) and Tailwind CSS for styling.
+* **Database:** PostgreSQL.
 
 ## Features right now
-* **User Auth:** simple JWT-based login and signup.
-* **Endpoint Management:** Save URLs you want to track.
-* **Manual Checks:** Hit an endpoint to check status code and latency.
-* **Anomaly Detection:** Checks the last 10 runs and flags if the current latency is significantly slower (3x) than average.
+* **User Auth:** Simple JWT-based login/signup to keep things secure.
+* **Endpoint Management:** Add, view, and delete the URLs you want to track.
+* **Manual Checks:** Hit an endpoint instantly to check its status code and latency.
+* **Anomaly Detection:** This is the cool part — it looks at the last 10 checks for an endpoint and flags it if the current latency is significantly slower (3x) than the average.
+* **Modern UI:** Currently building out a responsive frontend with Tailwind.
+
+<img width="458" height="424" alt="image" src="https://github.com/user-attachments/assets/3cba19ee-069b-4e8e-b0e7-e63093a8622c" />
+
+---
+
+## Project Structure
+I'm running this as a Mono-repo so I can manage both backend and frontend easily.
+
+```
+/
+├── run.py              # The entry point to start the Flask server
+├── /app                # Backend logic (Refactored to MVC)
+│   ├── /models         # SQL queries live here
+│   ├── /routes         # API endpoints (Blueprints)
+│   └── /services       # Heavy logic (like the anomaly math)
+│
+└── /frontend           # React Client
+    ├── /src
+    │   ├── /components # Dumb UI parts (Buttons, Inputs)
+    │   ├── /pages      # Smart Views (Login, Dashboard)
+    │   └── /services   # Axios API calls
+
+```
+
+---
 
 ## How to run it
 
 ### 1. Prerequisites
-You need Python and PostgreSQL installed.
 
-### 2. Setup
-Clone the repo and create a virtual environment:
+You need **Python 3**, **Node.js**, and **PostgreSQL** installed.
+
+### 2. Backend Setup
+
+First, get the Flask server running.
 
 ```
-bash
 python -m venv venv
-source venv/bin/activate # or venv\Scripts\activate on Windows
+source venv/bin/activate  # or venv\Scripts\activate on Windows
 pip install -r requirements.txt
+
 ```
 
-### 3. Environment Variables
-Create a .env file in the root and add your DB details:
-```
-Ini, TOML
+Create a `.env` file in the **root** folder with your DB credentials:
 
+```
 DB_NAME=your_db_name
 DB_USER=postgres
 DB_PASSWORD=password
 SECRET_KEY=somesecretkey
+
 ```
 
-### 4. Database Setup
-You'll need to create the tables manually for now (I haven't added migrations yet, will add later).
+Run it:
+
 ```
-users (id, username, password, role)
+python run.py
 
-endpoints (id, user_id, url, name)
-
-checks (id, endpoint_id, status_code, latency_ms, is_up, checked_at)
 ```
 
-### 5. Run the server
-Bash
+It runs on `http://localhost:5000`.
 
-python app.py
+### 3. Frontend Setup
 
-It runs on http://localhost:5000.
+Open a **new terminal tab** (leave the backend running) and go to the frontend folder.
 
-# API Routes
+```
+cd frontend
+npm install
+npm run dev
+
+```
+
+The UI runs on `http://localhost:5173`.
+
+---
+
+## Database Setup
+
+I haven't added migrations like Alembic yet, so you'll need to create these tables manually in Postgres for now:
+
+```
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    password TEXT NOT NULL,
+    role VARCHAR(20) DEFAULT 'user'
+);
+
+CREATE TABLE endpoints (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    url TEXT NOT NULL,
+    name VARCHAR(100)
+);
+
+CREATE TABLE checks (
+    id SERIAL PRIMARY KEY,
+    endpoint_id INTEGER REFERENCES endpoints(id),
+    status_code INTEGER,
+    latency_ms INTEGER,
+    is_up BOOLEAN,
+    checked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+```
+
+---
+
+## API Routes
 
 ### Auth
 
-```
-POST /create - Create a new user.
-
-POST /login - Get your JWT token.
-```
+* `POST /auth/register` - Create a new user.
+* `POST /auth/login` - Get your JWT token.
 
 ### Endpoints
-```
-POST /addEndpoint - Save a URL to monitor.
 
-POST /runUrl - Manually trigger a check for a saved endpoint.
-```
+* `POST /endpoints/addEndpoint` - Save a URL to monitor.
+* `POST /endpoints/runUrl` - Manually trigger a check for a saved endpoint.
 
 ### Analysis
 
-```
-POST /latencyAnomalyCheck - compares current latency vs the average of the last 10 checks.
-```
+* `POST /checks/latencyAnomalyCheck` - The math logic. Compares current latency vs the average of the last 10 checks.
 
-### Goals / To-Do
+---
 
-[ ] Add a background scheduler (APScheduler) so I don't have to check URLs manually.
+## Roadmap / To-Do
 
-[ ] Build a simple frontend dashboard.
-
-[ ] Add JSON schema validation to ensure APIs aren't just "up" but returning correct data.
-
-[ ] Clean up the database connection logic (maybe add connection pooling).
-
-Note: This is still a WIP, so might break if the DB isn't set up exactly right.
+* [x] Refactor backend to proper MVC structure
+* [x] Initialize React Frontend + Tailwind
+* [ ] Connect Frontend to Backend (Axios + CORS).
+* [ ] Build the Dashboard UI to visualize charts.
+* [ ] Add a background scheduler (APScheduler) so I don't have to check URLs manually.
+* [ ] Add JSON schema validation to ensure APIs aren't just "up" but returning correct data.
