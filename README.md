@@ -146,7 +146,7 @@ CREATE TABLE checks (
 
 * [x] Refactor backend to proper MVC structure
 * [x] Initialize React Frontend + Tailwind
-* [ ] Connect Frontend to Backend (Axios + CORS).
+* [x] Connect Frontend to Backend (Axios + CORS).
 * [ ] Build the Dashboard UI to visualize charts.
 * [ ] Add a background scheduler (APScheduler) so I don't have to check URLs manually.
 * [ ] Add JSON schema validation to ensure APIs aren't just "up" but returning correct data.
