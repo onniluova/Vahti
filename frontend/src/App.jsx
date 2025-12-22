@@ -8,7 +8,9 @@ import {
 } from 'react-router-dom'
 
 import Login from "./pages/Login"
-import Home from "./pages/Home"
+import Dashboard from "./pages/Dashboard"
+import Settings from "./pages/Settings"
+
 import ProtectedRoute from "./components/ProtectedRoute"
 import { UserProvider } from './context/userContext'
 import { Toaster } from 'react-hot-toast';
@@ -17,8 +19,8 @@ const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<Login />} />
-      <Route path="/home" element={<ProtectedRoute><Home /></ProtectedRoute>} 
-      />
+      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>}/>
+      <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>}/>
     </>
   )
 )

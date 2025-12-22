@@ -12,7 +12,7 @@ const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const { user, setUser } = useContext(UserContext)
+    const { user, setUser } = useContext(UserContext);
     let navigate = useNavigate();
 
     useEffect(() => {
@@ -39,7 +39,7 @@ const Login = () => {
 
             console.log(user);
 
-            navigate("/home");
+            navigate("/dashboard");
         } catch(error) {
             const message = error.response?.data?.message || "Login failed. Please try again.";
             toast.error(message);
