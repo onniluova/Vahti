@@ -20,6 +20,8 @@ The goal is to have a clean dashboard where I can track my API endpoints and get
 
 <img width="986" height="656" alt="image" src="https://github.com/user-attachments/assets/6d254590-6c8c-4cd4-bc05-b88336889f78" />
 
+<img width="1478" height="672" alt="image" src="https://github.com/user-attachments/assets/82beb5b6-267d-46dd-bb5d-e4a9fdc3daa5" />
+
 ---
 
 ## Project Structure
