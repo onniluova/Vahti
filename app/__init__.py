@@ -2,6 +2,7 @@ from flask import Flask
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
+from flask import jsonify
 
 load_dotenv()
 
@@ -17,5 +18,9 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(endpoints_bp)
     app.register_blueprint(checks_bp)
+
+    @app.route('/health', methods=['GET'])
+    def health_check():
+        return jsonify({"status": "alive", "message": "server health: ok"}), 200
     
     return app
