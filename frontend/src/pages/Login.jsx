@@ -28,16 +28,19 @@ const Login = () => {
             const { token, role, user_id } = response.data;
 
             localStorage.setItem("authToken", token);
+            localStorage.setItem("userDetails", JSON.stringify({ user_id, username, role }));
             
-            setUser({
+            const userData = {
                 user_id: user_id,
                 username: username,
                 role: role
-            })
+            };
+
+            setUser(userData);
 
             toast.success(`Welcome back, ${username}`);
 
-            console.log(user);
+            console.log(userData);
 
             navigate("/dashboard");
         } catch(error) {

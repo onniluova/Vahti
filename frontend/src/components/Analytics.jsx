@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./Header";
-import Button from "./Button";
 import { getEndpoints } from "../services/endpointService";
 import { RotateLoader } from 'react-spinners';
 import AnalyticsCard from "./AnalyticsCard";

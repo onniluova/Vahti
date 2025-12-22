@@ -4,12 +4,11 @@ export const getEndpoints = async () => {
     return api.get("/getEndpoints");
 }
 
-export const addEndpoint = async (user_id, url, name) => {
-    return api.post("/addEnpoint"), {
-        "user_id": user_id,
+export const addEndpoint = async (name, url) => {
+    return api.post("/addEndpoint", {
+        "name": name,
         "url": url,
-        "name": name
-    };
+    });
 }
 
 export const runUrl = async (endpoint_id) => {
