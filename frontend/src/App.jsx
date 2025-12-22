@@ -11,6 +11,7 @@ import Login from "./pages/Login"
 import Home from "./pages/Home"
 import ProtectedRoute from "./components/ProtectedRoute"
 import { UserProvider } from './context/userContext'
+import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
 const App = () => {
   return (
     <UserProvider>
+      <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
       <RouterProvider router={router} />
     </UserProvider>
   )

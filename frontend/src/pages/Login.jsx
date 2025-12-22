@@ -6,6 +6,7 @@ import Input from '../components/Input';
 import { RotateLoader } from 'react-spinners';
 import { loginAuth, registerAuth } from '../services/authService';
 import { UserContext } from '../context/userContext';
+import toast from 'react-hot-toast';
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -18,16 +19,8 @@ const Login = () => {
         localStorage.clear();
     }, []);
 
-    // navigate after user state has been updated
-    useEffect(() => {
-        console.log("User state updated:", user);
-        
-        if (user.user_id) {
-             navigate("/home");
-        }
-    }, [user, navigate]);
-
     const handleLoginClick = async () => {
+        toast.dismiss();
         setLoading(true)
 
         try {
@@ -42,27 +35,32 @@ const Login = () => {
                 role: role
             })
 
-            console.log("Success", response.data)
+            toast.success(`Welcome back, ${username}`);
+
             console.log(user);
+
+            navigate("/home");
         } catch(error) {
-            console.log("Login failed:", error);
+            const message = error.response?.data?.message || "Login failed. Please try again.";
+            toast.error(message);
         } finally {
             setLoading(false);
         }
     };
 
     const handleRegisterClick = async () => {
+        toast.dismiss();
         setLoading(true)
 
         try {
             const response = await registerAuth(username, password);
             console.log("Success", response.data)
-
+            toast.success("Account created succesfully!");
         } catch(error) {
-            console.log("Registering failed:", error);
+            const message = error.response?.data?.message || "Registering failed. Please try again.";
+            toast.error(message)
         } finally {
             setLoading(false);
-            navigate("/home");
         }
     };
 
