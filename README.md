@@ -10,6 +10,7 @@ The goal is to have a clean dashboard where I can track my API endpoints and get
 * **Backend:** Python (Flask) using a proper MVC structure.
 * **Frontend:** React + Vite and Tailwind CSS
 * **Database:** PostgreSQL.
+* **Site deployment:** Render (Backend) Vercel (Frontend)
 
 ## Features right now
 * **User Auth:** Simple JWT-based login/signup to keep things secure.
