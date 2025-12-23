@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, make_response
 from app.auth import tokenRequired
 from app.models.endpoint_model import EndpointModel
 from app.models.checks_model import CheckModel
@@ -60,9 +60,15 @@ def get_endpoint_stats(current_user, id):
     history = CheckModel.get_recent_checks(id, limit=20)
     uptime = CheckModel.get_uptime_stats(id)
 
-    return jsonify({
+    response = make_response(jsonify({
         "history": history,
         "uptime": uptime,
         "endpoint_name": endpoint['name'],
         "endpoint_url": endpoint['url']
-    }), 200
+    }))
+
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+
+    return response
