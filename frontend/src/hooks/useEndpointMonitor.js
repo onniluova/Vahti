@@ -1,43 +1,54 @@
 import { useEffect, useState } from "react";
-import { runUrl } from "../services/endpointService";
+import { getEndpointStats } from "../services/endpointService";
 
 export default function useEndpointMonitor(endpoints) {
-    const [liveStats, setLiveStats] = useState([])
+    const [liveStats, setLiveStats] = useState({});
 
     useEffect(() => {
-        const checkEndpoints = async () => {
-            if (!endpoints || endpoints.length === 0) {
-                return;
-            }
+        const fetchStatuses = async () => {
+            if (!endpoints || endpoints.length === 0) return;
 
-            endpoints.forEach(async (ep) => {
+            const promises = endpoints.map(async (ep) => {
                 try {
-                    const checkRes = await runUrl(ep.id);
+                    const statsRes = await getEndpointStats(ep.id);
                     
-                    setLiveStats(prev => ({
-                        ...prev,
-                        [ep.id]: {
-                            "is_up": checkRes.data.data.is_up,
-                            "status_code": checkRes.data.data.status || "0",
-                            "latency_ms": checkRes.data.data.latency_ms || "0ms",
-                            "checked_at": checkRes.data.data.checked_at || "",
+                    const responseData = statsRes.data;
+                    const history = responseData.history;
+
+                    const latest = (history && history.length > 0) ? history[0] : null;
+
+                    return {
+                        id: ep.id,
+                        stats: {
+                            is_up: latest ? latest.is_up : null, 
+                            status_code: latest ? latest.status_code : "Pending",
+                            latency_ms: latest ? latest.latency_ms : "-",
+                            checked_at: latest ? latest.checked_at : null,
                         }
-                    }))
+                    };
                 } catch(error) {
-                setLiveStats(prev => ({
-                    ...prev,
-                    [ep.id]: {
-                        is_up: false, 
-                        status_code: "Err",
-                        latency_ms: "0ms",
-                        checked_at: new Date().toISOString()
-                    }
-                }))
-            }
+                    console.error(`Failed to fetch stats for ${ep.id}`, error);
+                    return null;
+                }
             });
+
+            const results = await Promise.all(promises);
+            
+            const newStats = {};
+            results.forEach(res => {
+                if (res) {
+                    newStats[res.id] = res.stats;
+                }
+            });
+
+            setLiveStats(prev => ({ ...prev, ...newStats }));
         };
-        checkEndpoints();
-    }, [endpoints])
+
+        fetchStatuses();
+        const interval = setInterval(fetchStatuses, 5000);
+        return () => clearInterval(interval);
+
+    }, [endpoints]);
 
     return liveStats;
 }

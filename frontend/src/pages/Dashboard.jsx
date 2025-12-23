@@ -1,7 +1,7 @@
 import Navbar from "../components/Navbar";
 import Button from "../components/Button";
 import Analytics from "../components/Analytics";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import AddEndpointModal from "../components/AddEndpointModal";
 import DetailedAnalyticsModal from "../components/DetailedAnalyticsModal";
 import { AnimatePresence } from "framer-motion";
@@ -14,6 +14,14 @@ const Dashboard = () => {
     const handleSuccess = () => {
         setRefreshTrigger(prev => prev + 1);
     };
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setRefreshTrigger(prev => prev + 1);
+        }, 30000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <div className="relative font-mono min-h-screen bg-gradient-to-br from-emerald-700 to-violet-700 flex flex-col p-4 gap-5 overflow-hidden">

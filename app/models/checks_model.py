@@ -29,7 +29,7 @@ class CheckModel:
             SELECT status_code, latency_ms, is_up, checked_at 
             FROM checks 
             WHERE endpoint_id = %s 
-            ORDER BY checked_at ASC 
+            ORDER BY checked_at DESC 
             LIMIT %s
         """
         
