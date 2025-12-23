@@ -1,5 +1,5 @@
 import jwt
-import datetime
+from datetime import datetime, timedelta, timezone
 import os
 import jwt
 from functools import wraps
@@ -11,7 +11,7 @@ def createToken(user_id, role):
     payload = {
         'user_id': user_id,
         'role': role,
-        'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=8)
+        'exp': datetime.now(timezone.utc) + timedelta(minutes=30)
     }
 
     token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
