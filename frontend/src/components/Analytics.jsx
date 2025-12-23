@@ -5,7 +5,7 @@ import { RotateLoader } from 'react-spinners';
 import AnalyticsCard from "./AnalyticsCard";
 import useEndpointMonitor from "../hooks/useEndpointMonitor";
 
-export default function Analytics() {
+export default function Analytics({ refreshTrigger }) {
     const [endpoints, setEndpoints] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -35,7 +35,7 @@ export default function Analytics() {
         };
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
-    }, [])
+    }, [refreshTrigger])
 
     const handleShowMore = () => {
         const step = window.innerWidth < 768 ? 6 : 9;

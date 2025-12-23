@@ -1,54 +1,111 @@
-import Button from "./Button"
-import Header from "./Header"
-import Input from "./Input"
-import { useContext, useState } from "react";
-import { UserContext } from '../context/userContext';
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { RotateLoader } from "react-spinners";
+import { IoClose } from "react-icons/io5";
 import toast from 'react-hot-toast';
+import Button from "./Button";
+import Header from "./Header";
+import Input from "./Input";
 import { addEndpoint } from "../services/endpointService";
-import { useNavigate } from "react-router";
 
-export default function AddEndpointModal() {
-    const { user, setUser } = useContext(UserContext);
+const backdropVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 }
+};
+
+const modalVariants = {
+    hidden: { opacity: 0, y: -20, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1 }
+};
+
+export default function AddEndpointModal({ onClose, onSuccess }) {
     const [loading, setLoading] = useState(false);
-    const [endpointName, setEndpointName] = useState("")
-    const [endpointUrl, setEndpointUrl] = useState("")
-    let navigate = useNavigate();
-    console.log(user)
+    const [endpointName, setEndpointName] = useState("");
+    const [endpointUrl, setEndpointUrl] = useState("");
 
     const onCreateClick = async () => {
+        if (!endpointName || !endpointUrl) {
+            toast.error("Please fill in all fields");
+            return;
+        }
+
         setLoading(true);
         try {
-            const response = await addEndpoint(endpointName, endpointUrl)
-            console.log(response.data)
-
-            toast.success(`${endpointName} creation success!`)
+            await addEndpoint(endpointName, endpointUrl);
+            toast.success(`${endpointName} endpoint created successfully!`);
+            
+            if (onSuccess) onSuccess(); 
+            onClose(); 
         } catch(error) {
-            toast.error(`Endpoint creation failed.`);
-        }
-        finally {
-            navigate("/dashboard");
+            toast.error(error.response?.data?.message || "Endpoint creation failed.");
+        } finally {
             setLoading(false);
         }
     }
 
     return (
-        <div className="flex flex-grow flex-col justify-center items-center gap-5">
-            <Header className="text-white text-xl">Add Endpoint</Header>
-            <p className="text-white">Name</p>
-            <Input 
-                className="max-w-sm"
-                onChange={(e) => setEndpointName(e.target.value)}
+        <motion.div 
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+            variants={backdropVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            onClick={onClose}
+        >
+            <motion.div 
+                className="relative w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
+                variants={modalVariants}
+                onClick={(e) => e.stopPropagation()}
             >
-            </Input>
+                <button 
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
+                >
+                    <IoClose size={24} />
+                </button>
 
-            <p className="text-white">Link</p>
-            <Input 
-                className="max-w-sm"
-                onChange={(e) => setEndpointUrl(e.target.value)}
-            >
-            </Input>
+                <div className="flex flex-col gap-5">
+                    <Header className="text-white text-2xl font-bold text-center mb-2">
+                        Add Endpoint
+                    </Header>
 
-            <Button onClick={onCreateClick} disabled={loading} className="bg-white/10 text-white">Create</Button>
-        </div>
+                    <div>
+                        <p className="text-white text-sm mb-1 ml-1">Name</p>
+                        <Input 
+                            className="bg-white/5 border-white/10 focus:bg-white/10 text-white placeholder:text-white/30"
+                            placeholder="API Service name"
+                            value={endpointName}
+                            onChange={(e) => setEndpointName(e.target.value)}
+                        />
+                    </div>
+
+                    <div>
+                        <p className="text-white text-sm mb-1 ml-1">Target URL</p>
+                        <Input 
+                            className="bg-white/5 border-white/10 focus:bg-white/10 text-white placeholder:text-white/30"
+                            placeholder="https://api.example.com"
+                            value={endpointUrl}
+                            onChange={(e) => setEndpointUrl(e.target.value)}
+                        />
+                    </div>
+
+                    <div className="flex gap-3 mt-4">
+                        <Button 
+                            onClick={onClose}
+                            className="flex-1 bg-transparent border border-white/20 text-white hover:bg-white/10"
+                        >
+                            Cancel
+                        </Button>
+                        <Button 
+                            onClick={onCreateClick} 
+                            disabled={loading} 
+                            className="flex-1 bg-white text-emerald-900 hover:bg-gray-100 font-bold shadow-lg"
+                        >
+                            {loading ? <RotateLoader color="#064e3b" size={6} margin={2} /> : "Create"}
+                        </Button>
+                    </div>
+                </div>
+            </motion.div>
+        </motion.div>
     )
 }
