@@ -21,6 +21,8 @@ def addEndpoint(current_user):
 
     if not new_id:
         return jsonify({"error": "This endpoint already exists."}), 400
+
+    CheckService.perform_check(new_id, url)
     
     return jsonify({
         "message": "Endpoint created successfully",

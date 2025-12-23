@@ -1,6 +1,6 @@
 import time
 import requests
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 from app.models.checks_model import CheckModel
 
 class CheckService():
@@ -18,7 +18,7 @@ class CheckService():
         
         end_time = time.time()
         latency_ms = int((end_time - start_time) * 1000)
-        checked_at = datetime.now(UTC)
+        checked_at = datetime.now(timezone.utc)
 
         checked_id = CheckModel.save_check(endpoint_id, status_code, latency_ms, is_up, checked_at)
 

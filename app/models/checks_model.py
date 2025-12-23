@@ -38,7 +38,7 @@ class CheckModel:
         
         cur.close()
         conn.close()
-        return results
+        return results[::-1]
 
     @staticmethod
     def get_uptime_stats(endpoint_id):
