@@ -8,14 +8,15 @@ export default function useEndpointMonitor(endpoints) {
         const fetchStatuses = async () => {
             if (!endpoints || endpoints.length === 0) return;
 
+            console.log(`[Monitor] Starting fetch cycle for ${endpoints.length} endpoints...`);
+
             const promises = endpoints.map(async (ep) => {
                 try {
                     const statsRes = await getEndpointStats(ep.id);
-                    
                     const responseData = statsRes.data;
                     const history = responseData.history;
 
-                    const latest = (history && history.length > 0) ? history[0] : null;
+                    const latest = (history && history.length > 0) ? history[history.length - 1] : null;
 
                     return {
                         id: ep.id,
@@ -27,7 +28,7 @@ export default function useEndpointMonitor(endpoints) {
                         }
                     };
                 } catch(error) {
-                    console.error(`Failed to fetch stats for ${ep.id}`, error);
+                    console.error(`[Monitor] Failed to fetch stats for ${ep.id}`, error);
                     return null;
                 }
             });
