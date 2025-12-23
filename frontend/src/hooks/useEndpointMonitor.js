@@ -45,7 +45,7 @@ export default function useEndpointMonitor(endpoints) {
         };
 
         fetchStatuses();
-        const interval = setInterval(fetchStatuses, 5000);
+        const interval = setInterval(fetchStatuses, 30000);
         return () => clearInterval(interval);
 
     }, [endpoints]);
