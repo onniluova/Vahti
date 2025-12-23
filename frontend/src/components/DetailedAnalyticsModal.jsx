@@ -45,6 +45,31 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
         latency: item.latency_ms
     }));
 
+    const getGradientOffset = () => {
+        if (formattedData.length === 0) return 0;
+        
+        const dataMax = Math.max(...formattedData.map((i) => i.latency));
+        const dataMin = Math.min(...formattedData.map((i) => i.latency));
+        
+        const total = formattedData.reduce((sum, item) => sum + item.latency, 0);
+        const avg = total / formattedData.length;
+
+        const threshold = avg * 1.5;
+
+        if (dataMax <= 0) return 0;
+        if (dataMin >= dataMax) return 0;
+
+        const offset = (dataMax - threshold) / (dataMax - dataMin);
+        
+        return Math.min(Math.max(offset, 0), 1);
+    };
+
+    const off = getGradientOffset();
+
+    const axisColor = "#ffffff"; 
+    const goodColor = "#34d399";
+    const badColor = "#f87171";
+
     return (
         <motion.div 
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
@@ -55,7 +80,7 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
             onClick={onClose}
         >
             <motion.div 
-                className="relative w-full max-w-2xl bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
+                className="relative w-full max-w-2xl bg-gradient-to-br from-emerald-900/90 to-violet-900/90 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
                 variants={modalVariants}
                 onClick={(e) => e.stopPropagation()}
             >
@@ -77,26 +102,39 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
 
                 {loading ? (
                     <div className="h-64 flex items-center justify-center">
-                        <RotateLoader color="#ffffff" size={10} />
+                        <RotateLoader color={goodColor} size={10} />
                     </div>
                 ) : (
                     <div className="h-64 w-full">
                         <ResponsiveContainer width="100%" height="100%">
                             <LineChart data={formattedData}>
-                                <XAxis dataKey="time" stroke="#ffffff" opacity={0.5} tick={{fontSize: 12}} />
-                                <YAxis stroke="#ffffff" opacity={0.5} tick={{fontSize: 12}} width={40}/>
+                                <defs>
+                                    <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset={off} stopColor={badColor} stopOpacity={1} />
+                                        <stop offset={off} stopColor={goodColor} stopOpacity={1} />
+                                    </linearGradient>
+                                </defs>
+
+                                <XAxis dataKey="time" stroke={axisColor} opacity={0.5} tick={{fontSize: 12}} />
+                                <YAxis stroke={axisColor} opacity={0.5} tick={{fontSize: 12}} width={40}/>
+                                
                                 <Tooltip 
-                                    contentStyle={{ backgroundColor: '#222', border: '1px solid #444' }}
+                                    contentStyle={{ 
+                                        backgroundColor: 'rgba(0, 0, 0, 0.8)', 
+                                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                                        borderRadius: '8px',
+                                        color: '#fff'
+                                    }}
                                     itemStyle={{ color: '#fff' }}
-                                    labelStyle={{ color: '#ccc' }}
+                                    labelStyle={{ color: '#ccc', marginBottom: '4px' }}
                                 />
                                 <Line 
                                     type="monotone" 
                                     dataKey="latency" 
-                                    stroke="#10b981" 
+                                    stroke="url(#splitColor)" 
                                     strokeWidth={3}
                                     dot={false}
-                                    activeDot={{ r: 6 }}
+                                    activeDot={{ r: 6, stroke: 'white', strokeWidth: 2 }}
                                 />
                             </LineChart>
                         </ResponsiveContainer>

@@ -53,7 +53,7 @@ export default function AddEndpointModal({ onClose, onSuccess }) {
             onClick={onClose}
         >
             <motion.div 
-                className="relative w-full max-w-md bg-white/10 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
+                className="relative w-full max-w-md bg-gradient-to-br from-emerald-900/90 to-violet-900/90 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
                 variants={modalVariants}
                 onClick={(e) => e.stopPropagation()}
             >

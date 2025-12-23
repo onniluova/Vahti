@@ -9,10 +9,6 @@ export default function Analytics({ refreshTrigger, onCardClick }) {
     const [endpoints, setEndpoints] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    // determine screen width for the card responsivity
-    const getInitialCount = () => window.innerWidth < 768 ? 6 : 9;
-    const [visibleCount, setVisibleCount] = useState(getInitialCount());
-
     const liveStats = useEndpointMonitor(endpoints);
 
     useEffect(() => {
@@ -27,30 +23,17 @@ export default function Analytics({ refreshTrigger, onCardClick }) {
             }
         }
         fetchData();
+    }, [refreshTrigger]);
 
-        const handleResize = () => {
-             if (visibleCount < getInitialCount()) {
-                 setVisibleCount(getInitialCount());
-             }
-        };
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, [refreshTrigger])
-
-    const handleShowMore = () => {
-        const step = window.innerWidth < 768 ? 6 : 9;
-        
-        if (visibleCount >= endpoints.length) {
-            setVisibleCount(getInitialCount());
-        } else {
-            setVisibleCount(prev => prev + step);
-        }
-    };
+    const isFewItems = endpoints.length < 3;
+    const containerClasses = isFewItems 
+        ? "flex flex-wrap justify-center"
+        : "grid grid-cols-2 md:grid-cols-3";
 
     return ( 
-        <div className="w-full max-w-4xl mx-auto p-4 flex flex-col gap-6">
+        <div className="w-full max-w-4xl mx-auto p-4 flex flex-col gap-6 h-full">
             
-            <div className="text-center">
+            <div className="text-center flex-shrink-0">
                 <Header className="text-white/95 text-4xl font-bold tracking-wide">
                     Analytics
                 </Header>
@@ -59,7 +42,7 @@ export default function Analytics({ refreshTrigger, onCardClick }) {
                 </p>
             </div>
 
-            <div className="flex-grow min-h-[200px] flex flex-col">
+            <div className="flex-grow flex flex-col relative min-h-[200px]">
                 
                 {loading && (
                     <div className="flex-grow flex flex-col items-center justify-center gap-4 py-10">
@@ -76,33 +59,28 @@ export default function Analytics({ refreshTrigger, onCardClick }) {
                 )}
 
                 {!loading && endpoints.length > 0 && (
-                    <>
-                        <ul className="grid grid-cols-2 md:grid-cols-3 gap-3 transition-all duration-300">
-                            {endpoints.slice(0, visibleCount).map(endpoint => (
-                                <div 
-                                    key={endpoint.id} 
-                                    onClick={() => onCardClick(endpoint.id)}
-                                    className="cursor-pointer hover:scale-105 transition-transform duration-200"
-                                >
-                                    <AnalyticsCard
-                                        endpoint={endpoint}
-                                        liveStats={liveStats[endpoint.id]}
-                                    />
-                                </div>
-                            ))}
-                        </ul>
-
-                        {endpoints.length > getInitialCount() && (
-                            <button 
-                                onClick={handleShowMore}
-                                className="mt-4 text-xs text-white/40 hover:text-white transition-colors self-center uppercase tracking-widest"
+                    <ul 
+                        className={`${containerClasses} gap-3 overflow-y-auto max-h-[60vh] p-4 scrollbar-hide`}
+                        style={
+                            !isFewItems ? {
+                                maskImage: 'linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)',
+                                WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 20px, black calc(100% - 20px), transparent)'
+                            } : {}
+                        }
+                    >
+                        {endpoints.map(endpoint => (
+                            <div 
+                                key={endpoint.id} 
+                                onClick={() => onCardClick(endpoint.id)}
+                                className={`cursor-pointer hover:scale-105 transition-transform duration-200 ${isFewItems ? 'w-full max-w-sm' : ''}`}
                             >
-                                {visibleCount >= endpoints.length 
-                                    ? "Last page" 
-                                    : `Next page (${endpoints.length - visibleCount} remaining)`}
-                            </button>
-                        )}
-                    </>
+                                <AnalyticsCard
+                                    endpoint={endpoint}
+                                    liveStats={liveStats[endpoint.id]}
+                                />
+                            </div>
+                        ))}
+                    </ul>
                 )}
             </div>
         </div>
