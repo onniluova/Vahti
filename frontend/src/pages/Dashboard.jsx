@@ -57,7 +57,7 @@ const Dashboard = () => {
             </AnimatePresence>
 
             <div className="text-center mt-auto text-white/50 text-xs py-4">
-                © 2025 APIShield - Created by Onni Luova
+                © 2025 Vahti - Created by Onni Luova
             </div>
         </div>
     );

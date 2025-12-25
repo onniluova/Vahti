@@ -75,7 +75,7 @@ const Login = () => {
                 
                 <div className="text-center mb-8">
                     <p className="text-white text-sm">
-                        APIShield
+                        Vahti
                     </p>
                     <Header className="text-4xl font-bold text-white mb-2">
                         Login
@@ -137,7 +137,7 @@ const Login = () => {
             </div>
 
             <div className="absolute bottom-6 text-white text-xs">
-                © 2025 APIShield - Created by Onni Luova
+                © 2025 Vahti - Created by Onni Luova
             </div>
         </div>
     );
