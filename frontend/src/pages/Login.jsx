@@ -37,11 +37,7 @@ const Login = () => {
             };
 
             setUser(userData);
-
             toast.success(`Welcome back, ${username}`);
-
-            console.log(userData);
-
             navigate("/dashboard");
         } catch(error) {
             const message = error.response?.data?.message || "Login failed. Please try again.";
@@ -55,13 +51,19 @@ const Login = () => {
         toast.dismiss();
         setLoading(true)
 
-        try {
-            const response = await registerAuth(username, password);
-            console.log("Success", response.data)
-            toast.success("Account created succesfully!");
-        } catch(error) {
-            const message = error.response?.data?.message || "Registering failed. Please try again.";
-            toast.error(message)
+            try {
+                const response = await registerAuth(username, password);
+                toast.success("Account created succesfully!");
+            } catch(error) {
+                const feedback = error.response?.data?.error?.warning;
+
+                console.log(error.data)
+                
+                toast.error(
+                    <div>
+                        {feedback}
+                    </div>
+                )
         } finally {
             setLoading(false);
         }

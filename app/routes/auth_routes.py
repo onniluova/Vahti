@@ -4,6 +4,7 @@ from app.db_conn import get_db_connection
 from app.auth import tokenRequired
 from werkzeug.security import check_password_hash
 from app.auth import createToken
+from zxcvbn import zxcvbn
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -26,10 +27,17 @@ def def_createUser():
     data = request.get_json()
 
     u_name = data.get('username')
-    u_pass = data.get('password')
+    u_pass = data.get('password')      
 
     if not u_name or  not u_pass:
         return jsonify({"error": "Please enter valid credentials"}), 500
+
+    results = zxcvbn(u_pass)
+
+    if results["score"] < 3:
+        feedback = results["feedback"]
+
+        return jsonify({"error": feedback}), 400
 
     try:
         new_id = AuthModel.create_user(u_name, u_pass)
