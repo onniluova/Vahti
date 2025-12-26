@@ -1,6 +1,7 @@
 import Button from "./Button"
 import { useNavigate } from "react-router";
 import { HiOutlineLogout, HiCog, HiHome } from "react-icons/hi";
+import toast from 'react-hot-toast';
 
 export default function Navbar({ children, className = "", ...props }) {
     let navigate = useNavigate();
@@ -11,7 +12,7 @@ export default function Navbar({ children, className = "", ...props }) {
     };
 
     const handleSettingsClick = async () => {
-        navigate("/settings");
+        toast.error("Page is under construction")
     };
 
     const handleDashboardClick = async () => {
