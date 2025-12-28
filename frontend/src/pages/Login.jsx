@@ -69,7 +69,7 @@ const Login = () => {
     };
 
     return (
-        <div className="font-mono min-h-screen bg-gradient-to-br from-emerald-700 to-violet-700 flex items-center justify-center p-4">
+        <div className="min-h-screen bg-gradient-to-br from-emerald-700 to-violet-700 flex items-center justify-center p-4">
             <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl w-full max-w-md p-8 border border-white/20">
                 
                 <div className="text-center mb-8">

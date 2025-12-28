@@ -66,7 +66,7 @@ export default function AddEndpointModal({ onClose, onSuccess }) {
 
                 <div className="flex flex-col gap-5">
                     <Header className="text-white text-2xl font-bold text-center mb-2">
-                        Add Endpoint
+                        Add endpoint
                     </Header>
 
                     <div>

@@ -24,7 +24,7 @@ const Dashboard = () => {
     }, []);
 
     return (
-        <div className="relative font-mono min-h-screen bg-gradient-to-br from-emerald-700 to-violet-700 flex flex-col p-4 gap-5 overflow-hidden">
+        <div className="relative min-h-screen bg-gradient-to-br from-emerald-700 to-violet-700 flex flex-col p-4 gap-5 overflow-hidden">
             <Navbar />
 
             <div className="flex flex-grow flex-col justify-center items-center gap-6 z-10">
@@ -34,7 +34,7 @@ const Dashboard = () => {
                     onClick={() => setOnAddEndpoint(true)}
                     className="bg-white/20 backdrop-blur-md hover:bg-white/30 text-white border border-white/30 px-8 py-3 rounded-xl shadow-lg transition-all"
                 >
-                    + Add New Endpoint
+                    + Add new endpoint
                 </Button>
             </div>
 
