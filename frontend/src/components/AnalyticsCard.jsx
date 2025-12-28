@@ -22,7 +22,8 @@ export default function AnalyticsCard({ endpoint, liveStats }) {
             const result = await deleteEndpoint(endpoint_id)
             toast.success("Endpoint deleted.")
         } catch(error) {
-            toast.error(error)
+            const errorMessage = error.response?.data?.message || error.message || "Failed to delete endpoint.";
+            toast.error(errorMessage);
         }
         finally {
             setLoading(false)
