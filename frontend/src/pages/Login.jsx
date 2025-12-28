@@ -36,7 +36,6 @@ const Login = () => {
                 role: role
             };
 
-            setUser(userData);
             toast.success(`Welcome back, ${username}`);
             navigate("/dashboard");
         } catch(error) {
