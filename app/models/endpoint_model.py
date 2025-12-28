@@ -24,6 +24,17 @@ class EndpointModel:
         finally:
             cur.close()
             conn.close()
+        
+    @staticmethod
+    def delete_endpoint(endpoint_id):
+        conn = get_db_connection()
+        cur = conn.cursor()
+        try:
+            cur.execute("DELETE FROM endpoints WHERE id=%s", (endpoint_id, ))
+            conn.commit()
+        finally:
+            cur.close()
+            conn.close()
 
     @staticmethod
     def get_by_id(endpoint_id):

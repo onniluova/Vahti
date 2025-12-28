@@ -11,6 +11,10 @@ export const addEndpoint = async (name, url) => {
     });
 }
 
+export const deleteEndpoint = async (endpoint_id) => {
+    return api.delete(`/${endpoint_id}/delete`);
+}
+
 export const runUrl = async (endpoint_id) => {
     return api.post("/runUrl", {
         "endpoint_id": endpoint_id

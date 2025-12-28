@@ -1,6 +1,12 @@
 import { BeatLoader } from 'react-spinners';
+import Button from './Button';
+import { HiMiniTrash } from "react-icons/hi2";
+import { deleteEndpoint } from '../services/endpointService';
+import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 
 export default function AnalyticsCard({ endpoint, liveStats }) {
+    const [loading, setLoading] = useState(false)
     if (!endpoint) return null;
 
     const formatDate = (isoString) => {
@@ -8,6 +14,20 @@ export default function AnalyticsCard({ endpoint, liveStats }) {
         const date = new Date(isoString);
         return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
     };
+
+    const handleDeleteClick = async (endpoint_id) => {
+        setLoading(true);
+
+        try {
+            const result = await deleteEndpoint(endpoint_id)
+            toast.success("Endpoint deleted.")
+        } catch(error) {
+            toast.error(error)
+        }
+        finally {
+            setLoading(false)
+        }
+    }
 
     let statusColor = "bg-slate-500 shadow-[0_0_8px_rgba(100,116,139,0.5)]";
     let statusText = "PENDING";
@@ -28,7 +48,7 @@ export default function AnalyticsCard({ endpoint, liveStats }) {
     return (
         <li 
             className="
-                group relative flex flex-col justify-between h-full w-full p-5 gap-2 rounded-xl
+                group relative flex flex-col h-full w-full p-5 gap-3 rounded-xl
                 bg-white/5 hover:bg-white/10 
                 border border-emerald-500/50 hover:border-emerald-500/50
                 transition-all duration-300 ease-out
@@ -46,20 +66,19 @@ export default function AnalyticsCard({ endpoint, liveStats }) {
                 )}
             </div>
 
-            <div className="relative h-auto w-full gap-1">
+            <div className="grid grid-cols-1 grid-rows-1 flex-grow items-end">
                 
                 <span className="
-                    top-0 left-0 w-full
-                    text-emerald-200 text-[10px] font-mono break-all line-clamp-2 leading-tight
-                    transition-all duration-300
-                    group-hover:opacity-0 group-hover:translate-y-2
-                ">
+                    col-start-1 row-start-1 w-full
+                    transition-all duration-300 ease-in-out
+                    opacity-100 translate-y-0
+                    group-hover:opacity-0 group-hover:translate-y-2 group-hover:pointer-events-none">
                     {showContent ? (
                         <div className={`flex flex-col gap-1 ${textColor}`}>
                             <ul>
                                 <li className="text-xs font-bold">{statusText}</li>
-                                <li>Status code: {liveStats.status_code}</li>
-                                <li>Last: {formatDate(liveStats.checked_at)}</li>
+                                <li className="text-xs font-bold">Status code: {liveStats.status_code}</li>
+                                <li className="text-xs font-bold">Last: {formatDate(liveStats.checked_at)}</li>
                             </ul>
                         </div>
                     ) : (
@@ -70,16 +89,24 @@ export default function AnalyticsCard({ endpoint, liveStats }) {
                 </span>
 
                 <div className="
-                    absolute top-0 left-0 w-full flex flex-col justify-end
-                    text-white text-xs font-bold uppercase tracking-wider
+                    col-start-1 row-start-1 w-full flex flex-col justify-end gap-2
+                    transition-all duration-300 ease-in-out
                     opacity-0 translate-y-2
-                    transition-all duration-300
-                    group-hover:opacity-100 group-hover:translate-y-0
-                ">
-                    <span>See full analysis</span>
-                    <span className="text-[10px] font-normal normal-case opacity-70 truncate">{endpoint.url}</span>
+                    group-hover:opacity-100 group-hover:translate-y-0">
+                    <div className='flex flex-col text-white'>
+                        <span>See full analysis</span>
+                        <span className="text-[10px] font-normal normal-case opacity-70 truncate">{endpoint.url}</span>
+                    </div>
+                    <div className='flex justify-end text-white'>
+                        <Button onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteClick(endpoint.id);
+                        }}
+                            className="bg-red-500/5 border border-solid border-red-500/15 max-w-sm justify-right items-left text-white">
+                        <HiMiniTrash />
+                        </Button>
+                    </div>
                 </div>
-
             </div>
         </li>
     );

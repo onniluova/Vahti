@@ -47,6 +47,22 @@ def getEndpoints(current_user):
         "endpoints": endpoints
     }), 201
 
+@endpoints_bp.route('/<int:endpoint_id>/delete', methods=['DELETE'])
+@tokenRequired
+def deleteEndpoint(current_user, endpoint_id):
+    user_id = current_user['user_id']
+
+    endpoint = EndpointModel.get_by_id(endpoint_id)
+
+    if not endpoint or endpoint['user_id'] != user_id:
+         return jsonify({"error": "Endpoint not found or unauthorized"}), 403
+
+    EndpointModel.delete_endpoint(endpoint_id)
+    
+    return jsonify({
+        "message": f"Endpoint {endpoint_id} deleted succesfully.",
+    }), 201 
+
 @endpoints_bp.route('/<int:id>/stats', methods=['GET'])
 @tokenRequired
 def get_endpoint_stats(current_user, id):
