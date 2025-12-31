@@ -28,7 +28,11 @@ const Dashboard = () => {
             <Navbar />
 
             <div className="flex flex-grow flex-col justify-center items-center gap-6 z-10">
-                <Analytics refreshTrigger={refreshTrigger} onCardClick={(id) => setSelectedEndpointId(id)}/>
+                <Analytics 
+                refreshTrigger={refreshTrigger} 
+                onCardClick={(id) => setSelectedEndpointId(id)}
+                onDelete={handleSuccess}
+                />
                 
                 <Button 
                     onClick={() => setOnAddEndpoint(true)}

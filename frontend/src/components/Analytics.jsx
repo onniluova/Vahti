@@ -8,7 +8,7 @@ import EmptyState from "./EmptyState";
 import AnalyticsGrid from "./AnalyticsGrid";
 import toast from 'react-hot-toast';
 
-export default function Analytics({ refreshTrigger, onCardClick, onDeleteClick }) {
+export default function Analytics({ refreshTrigger, onCardClick, onDelete }) {
     const [endpoints, setEndpoints] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -59,6 +59,7 @@ export default function Analytics({ refreshTrigger, onCardClick, onDeleteClick }
                                 <AnalyticsCard
                                     endpoint={endpoint}
                                     liveStats={liveStats[endpoint.id]}
+                                    onDelete={onDelete}
                                 />
                             </div>
                         ))}

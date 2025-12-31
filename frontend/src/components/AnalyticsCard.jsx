@@ -5,7 +5,7 @@ import { deleteEndpoint } from '../services/endpointService';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 
-export default function AnalyticsCard({ endpoint, liveStats }) {
+export default function AnalyticsCard({ endpoint, liveStats, onDelete }) {
     const [loading, setLoading] = useState(false)
     if (!endpoint) return null;
 
@@ -19,8 +19,10 @@ export default function AnalyticsCard({ endpoint, liveStats }) {
         setLoading(true);
 
         try {
-            const result = await deleteEndpoint(endpoint_id)
+            await deleteEndpoint(endpoint_id)
             toast.success("Endpoint deleted.")
+
+            if (onDelete) onDelete(endpoint_id);
         } catch(error) {
             const errorMessage = error.response?.data?.message || error.message || "Failed to delete endpoint.";
             toast.error(errorMessage);
@@ -92,21 +94,22 @@ export default function AnalyticsCard({ endpoint, liveStats }) {
                 <div className="
                     col-start-1 row-start-1 w-full flex flex-col justify-end gap-2
                     transition-all duration-300 ease-in-out
-                    opacity-0 translate-y-2
-                    group-hover:opacity-100 group-hover:translate-y-0">
+                    opacity-100 translate-y-0
+                    md:opacity-0 md:translate-y-2
+                    md:group-hover:opacity-100 md:group-hover:translate-y-0">
                     <div className='flex flex-col text-white'>
-                        <span>See full analysis</span>
-                        <span className="text-[10px] font-normal normal-case opacity-70 truncate">{endpoint.url}</span>
+                        <span className='hidden md:flex'>See full analysis</span>
+                        <span className="hidden md:flex text-[10px] font-normal normal-case opacity-70 truncate">{endpoint.url}</span>
                     </div>
                     <div className='flex justify-end text-white'>
                         <Button onClick={(e) => {
                             e.stopPropagation();
                             handleDeleteClick(endpoint.id);
-                        }}
-                            className="bg-red-500/5 border border-solid border-red-500/15 max-w-sm justify-right items-left text-white">
+                            }}
+                        className="bg-red-500/5 border border-solid border-red-500/15 max-w-sm justify-right items-left text-white">
                         <HiMiniTrash />
                         </Button>
-                    </div>
+                        </div> 
                 </div>
             </div>
         </li>
