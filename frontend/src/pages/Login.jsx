@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import Button from '../components/Button';
 import Header from '../components/Header';
 import Input from '../components/Input';
-import { RotateLoader } from 'react-spinners';
+import { BeatLoader } from 'react-spinners';
 import { loginAuth, registerAuth } from '../services/authService';
 import { UserContext } from '../context/userContext';
 import { useTheme } from '../context/themeContext';
@@ -139,7 +139,7 @@ const Login = () => {
                             className="w-full py-3 text-white border border-gray-200 shadow-slate-500/30 hover:bg-slate-200 hover:text-gray-500"
                         >
                             {loading ? (
-                                <RotateLoader color="white" loading={loading} size={8} margin={2} />
+                                <BeatLoader color="white" loading={loading} size={8} margin={2} />
                             ) : (
                                 "Sign In"
                             )}
@@ -155,7 +155,7 @@ const Login = () => {
                             className="w-full text-white border border-gray-200 hover:bg-slate-200 hover:text-gray-500 shadow-none"
                         >
                             {loading ? (
-                                <RotateLoader color="white" loading={loading} size={5} margin={2} />
+                                <BeatLoader color="white" loading={loading} size={5} margin={2} />
                             ) : (
                                 "Create Account"
                             )}
