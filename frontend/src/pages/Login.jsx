@@ -85,13 +85,13 @@ const Login = () => {
             onMouseMove={handleMouseMove}
             className="min-h-screen dark:bg-slate-900 dark:bg-none bg-gradient-to-br from-emerald-700 to-violet-700 flex items-center justify-center p-4 relative overflow-hidden"
         >
-            <button 
+            <Button 
                 onClick={toggleTheme}
                 className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all border border-white/10 text-white shadow-lg cursor-pointer z-50"
                 aria-label="Toggle Dark Mode"
             >
                 {theme === 'dark' ? <p>Dark</p> : <p>Light</p>}
-            </button>
+            </Button>
             <motion.div 
                 style={{
                     maskImage: useMotionTemplate`radial-gradient(350px circle at ${mouseX}px ${mouseY}px, black, transparent)`,

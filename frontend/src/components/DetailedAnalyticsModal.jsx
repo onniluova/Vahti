@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import Header from "./Header";
 import { getEndpointStats } from "../services/endpointService";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { useTheme } from '../context/themeContext';
 
 const backdropVariants = {
     hidden: { opacity: 0 },
@@ -23,6 +24,7 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
     const [stats, setStats] = useState(null);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
+    const { theme, toggleTheme } = useTheme()
 
     useEffect(() => {
         const loadAnalytics = async () => {
@@ -103,7 +105,7 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
             onClick={onClose}
         >
             <motion.div 
-                className="relative w-full max-w-2xl bg-gradient-to-br from-emerald-900/25 to-violet-900/25 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
+                className="relative dark:bg-none dark:bg-slate-900/50 w-full max-w-2xl bg-gradient-to-br from-emerald-900/25 to-violet-900/25 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
                 variants={modalVariants}
                 onClick={(e) => e.stopPropagation()}
             >

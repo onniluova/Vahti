@@ -29,13 +29,13 @@ const Dashboard = () => {
         <div 
             className="relative dark:bg-none min-h-screen bg-gradient-to-br from-emerald-700 to-violet-700 dark:bg-slate-900 flex flex-col p-4 gap-5 overflow-hidden"
         >
-            <button 
+            <Button 
                 onClick={toggleTheme}
                 className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all border border-white/10 text-white shadow-lg cursor-pointer z-50"
                 aria-label="Toggle Dark Mode"
             >
                 {theme === 'dark' ? <p>Dark</p> : <p>Light</p>}
-            </button>
+            </Button>
             
             <div 
                 className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff10_1px,transparent_1px),linear-gradient(to_bottom,#ffffff10_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"
