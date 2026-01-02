@@ -7,6 +7,7 @@ import { RotateLoader } from 'react-spinners';
 import { loginAuth, registerAuth } from '../services/authService';
 import { UserContext } from '../context/userContext';
 import toast from 'react-hot-toast';
+import { motion, useMotionTemplate, useMotionValue } from 'framer-motion';
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -14,6 +15,15 @@ const Login = () => {
     const [loading, setLoading] = useState(false);
     const { user, setUser } = useContext(UserContext);
     let navigate = useNavigate();
+
+    const mouseX = useMotionValue(0);
+    const mouseY = useMotionValue(0);
+
+    function handleMouseMove({ currentTarget, clientX, clientY }) {
+        let { left, top } = currentTarget.getBoundingClientRect();
+        mouseX.set(clientX - left);
+        mouseY.set(clientY - top);
+    }
 
     useEffect(() => {
         localStorage.clear();
@@ -69,8 +79,18 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-700 to-violet-700 flex items-center justify-center p-4">
-            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl w-full max-w-md p-8 border border-white/20">
+        <div 
+            onMouseMove={handleMouseMove}
+            className="min-h-screen dark:bg-slate-700 bg-gradient-to-br from-emerald-700 to-violet-700 flex items-center justify-center p-4 relative overflow-hidden"
+        >
+            <motion.div 
+                style={{
+                    maskImage: useMotionTemplate`radial-gradient(350px circle at ${mouseX}px ${mouseY}px, black, transparent)`,
+                    WebkitMaskImage: useMotionTemplate`radial-gradient(350px circle at ${mouseX}px ${mouseY}px, black, transparent)`,
+                }}
+                className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff20_1px,transparent_1px),linear-gradient(to_bottom,#ffffff20_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"
+            />
+            <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl w-full max-w-md p-8 border border-white/20 relative z-10">
                 
                 <div className="text-center mb-8">
                     <p className="text-white text-sm">

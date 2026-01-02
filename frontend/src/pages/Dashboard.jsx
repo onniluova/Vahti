@@ -25,6 +25,7 @@ const Dashboard = () => {
 
     return (
         <div className="relative min-h-screen bg-gradient-to-br from-emerald-700 to-violet-700 flex flex-col p-4 gap-5 overflow-hidden">
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none"></div>
             <Navbar />
 
             <div className="flex flex-grow flex-col justify-center items-center gap-6 z-10">
