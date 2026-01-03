@@ -4,8 +4,12 @@ import { useTheme } from '../context/ThemeContext';
 import Header from "../components/Header"
 import Navbar from "../components/Navbar"
 import Button from "../components/Button"
-import Input from "../components/Input"
 import toast from 'react-hot-toast';
+
+import ProfileTab from '../components/Settings/ProfileTab';
+import MonitoringTab from '../components/Settings/MonitoringTab';
+import AppTab from '../components/Settings/AppTab';
+import AccountTab from '../components/Settings/AccountTab.jsx';
 
 const Settings = () => {
     const { user } = useContext(UserContext);
@@ -82,112 +86,30 @@ const Settings = () => {
                     <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-xl p-6 h-[500px] flex flex-col justify-between">
                         
                         {activeTab === 'profile' && (
-                            <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300">
-                                <h2 className="text-white font-semibold text-lg border-b border-white/10 pb-2">Profile Information</h2>
-                                <div className="flex flex-col gap-4">
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-xs font-medium text-white/80 uppercase tracking-wider">Username</label>
-                                        <div className="bg-black/20 text-white/90 px-4 py-3 rounded-lg border border-white/5">
-                                            {user?.username || "Guest"}
-                                        </div>
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-xs font-medium text-white/80 uppercase tracking-wider">Role</label>
-                                        <div className="bg-black/20 text-white/90 px-4 py-3 rounded-lg border border-white/5">
-                                            {user?.role || "User"}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <ProfileTab
+                            currentUser={user}
+                            ></ProfileTab>
                         )}
 
                         {activeTab === 'monitoring' && (
-                            <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300 h-full">
-                                <h2 className="text-white font-semibold text-lg border-b border-white/10 pb-2">Monitoring Defaults</h2>
-                                <div className="flex flex-col gap-4">
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-xs font-medium text-white/80 uppercase tracking-wider">Check Interval (Min)</label>
-                                        <Input 
-                                            type="number"
-                                            name="checkInterval"
-                                            value={settings.checkInterval}
-                                            onChange={handleChange}
-                                            className="bg-white/5 border-white/10 focus:bg-white/10 text-white"
-                                            min="3"
-                                        />
-                                    </div>
-                                    <div className="flex flex-col gap-2">
-                                        <label className="text-xs font-medium text-white/80 uppercase tracking-wider">Timeout (Sec)</label>
-                                        <Input 
-                                            type="number" 
-                                            name="requestTimeout"
-                                            value={settings.requestTimeout}
-                                            onChange={handleChange}
-                                            className="bg-white/5 border-white/10 focus:bg-white/10 text-white"
-                                            min="5"
-                                            max="60"
-                                        />
-                                    </div>
-                                </div>
-                                <div className="mt-auto pt-4">
-                                    <Button 
-                                        onClick={handleSave} 
-                                        disabled={loading}
-                                        className="w-full bg-emerald-500 hover:bg-emerald-400 text-white font-semibold py-3 rounded-xl shadow-lg transition-all active:scale-95"
-                                    >
-                                        {loading ? "Saving..." : "Save Changes"}
-                                    </Button>
-                                </div>
-                            </div>
+                            <MonitoringTab
+                            settings={settings}
+                            handleChange={handleChange}
+                            handleSave={handleSave}
+                            loading={loading}
+                            ></MonitoringTab>
                         )}
 
                         {activeTab === 'app' && (
-                            <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300">
-                                <h2 className="text-white font-semibold text-lg border-b border-white/10 pb-2">App Preferences</h2>
-                                <div className="flex flex-col gap-4">
-                                    <div className="flex items-center justify-between p-2">
-                                        <span className="text-white text-sm">Dark Mode</span>
-                                        <button 
-                                            onClick={toggleTheme}
-                                            className={`w-12 h-6 rounded-full p-1 transition-colors duration-300 ${theme === 'dark' ? 'bg-emerald-500' : 'bg-slate-600'}`}
-                                        >
-                                            <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${theme === 'dark' ? 'translate-x-6' : 'translate-x-0'}`} />
-                                        </button>
-                                    </div>
-
-                                    <div className="flex items-center justify-between p-2">
-                                        <span className="text-white text-sm">Auto-Refresh</span>
-                                        <button 
-                                            onClick={() => setSettings(p => ({...p, autoRefreshDashboard: !p.autoRefreshDashboard}))}
-                                            className={`w-12 h-6 rounded-full p-1 transition-colors duration-300 ${settings.autoRefreshDashboard ? 'bg-emerald-500' : 'bg-slate-600'}`}
-                                        >
-                                            <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${settings.autoRefreshDashboard ? 'translate-x-6' : 'translate-x-0'}`} />
-                                        </button>
-                                    </div>
-                                    
-                                    <div className="flex items-center justify-between p-2 opacity-50">
-                                        <span className="text-white text-sm">Email Alerts</span>
-                                        <div className="w-12 h-6 rounded-full p-1 bg-slate-600">
-                                            <div className="bg-white w-4 h-4 rounded-full shadow-md" />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <AppTab
+                            settings={settings}
+                            theme={theme}
+                            toggleTheme={toggleTheme}
+                            ></AppTab>
                         )}
 
                         {activeTab === 'account' && (
-                            <div className="flex flex-col gap-6 animate-in fade-in zoom-in-95 duration-300">
-                                <h2 className="text-red-200 font-semibold text-lg border-b border-red-500/20 pb-2">Account</h2>
-                                <div className="bg-red-500/10 rounded-xl p-4 border border-red-500/20 flex flex-col gap-4">
-                                    <div className="text-sm text-red-200/80">
-                                        <p className="font-bold text-red-100 mb-1">Delete Account</p>
-                                        <p className="leading-relaxed">Permanently remove your account and all data. This action cannot be undone.</p>
-                                    </div>
-                                    <Button className="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-lg shadow-lg shadow-red-900/20">
-                                        Delete Account
-                                    </Button>
-                                </div>
-                            </div>
+                            <AccountTab></AccountTab>
                         )}
 
                     </div>

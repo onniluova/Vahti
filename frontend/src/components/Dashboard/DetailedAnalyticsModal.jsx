@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { RotateLoader } from "react-spinners";
 import { IoClose } from "react-icons/io5";
 import toast from 'react-hot-toast';
-import Header from "./Header";
-import { getEndpointStats } from "../services/endpointService";
+import Header from "../Header";
+import { getEndpointStats } from "../../services/endpointService";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme } from '../../context/ThemeContext';
 
 const backdropVariants = {
     hidden: { opacity: 0 },

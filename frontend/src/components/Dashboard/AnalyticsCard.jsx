@@ -1,7 +1,7 @@
 import { BeatLoader } from 'react-spinners';
-import Button from './Button';
+import Button from '../Button';
 import { HiMiniTrash } from "react-icons/hi2";
-import { deleteEndpoint } from '../services/endpointService';
+import { deleteEndpoint } from '../../services/endpointService';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 

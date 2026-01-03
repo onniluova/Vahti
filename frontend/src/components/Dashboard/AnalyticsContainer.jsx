@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import Header from "./Header";
-import { getEndpoints } from "../services/endpointService";
+import Header from "../Header";
+import { getEndpoints } from "../../services/endpointService";
 import AnalyticsCard from "./AnalyticsCard";
-import useEndpointMonitor from "../hooks/useEndpointMonitor";
+import useEndpointMonitor from "../../hooks/useEndpointMonitor";
 import LoadingState from "./LoadingState";
 import EmptyState from "./EmptyState";
 import AnalyticsGrid from "./AnalyticsGrid";

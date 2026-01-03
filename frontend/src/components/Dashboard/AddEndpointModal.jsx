@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 import { RotateLoader } from "react-spinners";
 import { IoClose } from "react-icons/io5";
 import toast from 'react-hot-toast';
-import Button from "./Button";
-import Header from "./Header";
-import Input from "./Input";
-import { addEndpoint } from "../services/endpointService";
+import Button from "../Button";
+import Header from "../Header";
+import Input from "../Input";
+import { addEndpoint } from "../../services/endpointService";
 
 const backdropVariants = {
     hidden: { opacity: 0 },
