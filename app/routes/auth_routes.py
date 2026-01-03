@@ -5,7 +5,6 @@ from app.auth import tokenRequired
 from werkzeug.security import check_password_hash
 from app.auth import createToken
 from zxcvbn import zxcvbn
-from google.auth.transport import requests
 import os
 import requests
 
