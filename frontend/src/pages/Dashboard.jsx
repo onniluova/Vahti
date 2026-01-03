@@ -3,7 +3,7 @@ import Button from "../components/Button";
 import Analytics from "../components/Dashboard/AnalyticsContainer";
 import { useState, useEffect } from 'react';
 import AddEndpointModal from "../components/Dashboard/AddEndpointModal";
-import DetailedAnalyticsModal from "../components//Dashboard/DetailedAnalyticsModal";
+import DetailedAnalyticsModal from "../components/Dashboard/DetailedAnalyticsModal";
 import { AnimatePresence } from "framer-motion";
 import { useTheme } from '../context/ThemeContext';
 
