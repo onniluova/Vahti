@@ -35,7 +35,6 @@ const Login = () => {
                 toast.success(`Welcome ${username}`);
                 navigate("/dashboard");
             } catch (error) {
-                console.error("Google Login Error:", error);
                 toast.error("Google authentication failed.");
             } finally {
                 setLoading(false);
@@ -44,7 +43,6 @@ const Login = () => {
         onError: () => toast.error("Google Login Failed"),
     });
 
-    
     const handleLoginClick = async () => {
         toast.dismiss();
         setLoading(true)
@@ -94,11 +92,9 @@ const Login = () => {
                 const response = await registerAuth(username, password);
                 toast.success("Account created succesfully!");
             } catch(error) {
-                console.error("Registration Error:", error);
-                
                 const data = error.response?.data;
 
-                const feedback = 
+                let feedback = 
                     data?.error?.warning ||
                     data?.error ||
                     data?.message ||
