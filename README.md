@@ -28,8 +28,7 @@ This project was built to demonstrate a full production pipeline: from a Python 
 
 * **Secure Authentication:** JWT-based login and signup flow. Includes robust password strength enforcement using Dropbox's `zxcvbn` library to prevent weak credentials.
 * **Endpoint Management:** Full CRUD operations for adding, monitoring, and deleting API targets.
-* **Real-time Checks:** Manual trigger to verify status code and latency (ms) instantly.
-* **Anomaly Detection:** Statistical analysis engine that compares the current request latency against the moving average of the last 10 checks. It flags performance degradation before the service goes offline.
+* **Scheduled checks:** Automatic endpoint checking through background process.
 * **Responsive UI:** Dashboard built with Tailwind CSS, fully responsive for desktop and mobile.
 
 ## Project Structure
@@ -84,6 +83,7 @@ The project is managed as a Mono-repo to streamline development.
 * [x] Add timeline selection to charts.
 * [x] Implement settings menu.
 * [ ] Administration tools for user and endpoint monitoring.
+
 
 
 
