@@ -100,7 +100,7 @@ const Login = () => {
                     data?.message ||
                     "Registration failed. Please try again.";
 
-                const suggestions = data?.error?.suggestions || [];
+                let suggestions = data?.error?.suggestions || [];
                 
                 if (typeof errorContent === 'object' && errorContent !== null) {
                     feedback = errorContent.warning || "Password is too weak.";
