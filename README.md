@@ -1,8 +1,8 @@
 <img width="1024" height="434" alt="unnamed2-Photoroom" src="https://github.com/user-attachments/assets/dc7c038a-71cd-43cf-9296-25ad35064d78" />
 
-Vahti is a custom API monitoring tool designed to track endpoint availability and performance. Unlike basic uptime monitors, it includes a custom latency anomaly detection engine that flags endpoints performing significantly worse than their historical average.
+Vahti is a custom API monitoring tool designed to track endpoint availability and performance.
 
-This project was built to demonstrate a full production pipeline: from a Python backend developed on Arch Linux to a deployed cloud architecture using Render and Vercel.
+This project was built to demonstrate a full production pipeline: from a Python backend to a deployed cloud architecture using Render and Vercel.
 
 ## Live Demo
 
@@ -44,16 +44,34 @@ The project is managed as a Mono-repo to streamline development.
 │   ├── /routes         # API Blueprints (Auth, Endpoints, Checks)
 │   └── /services       # Business Logic (Anomaly detection, Scheduler)
 │
-└── /frontend           # React Client
+└── /frontend            # React Client
     ├── /src
-    │   ├── /components # Reusable UI components
-    │   ├── /pages      # Route views
-    │   └── /services   # Axios API configurations
+    │   ├── /components
+    │   │   ├── /Dashboard  # Feature-specific widgets
+    │   │   ├── /Layout     # Navbar, structural elements
+    │   │   ├── /Settings   # Settings tabs
+    │   │   └── /ui         # Reusable atomic components (Button, Input)
+    │   ├── /context        # Global state (User, Theme)
+    │   └── /pages          # Route views
 ```
 
 ## Database Schema
 
 <img width="500" height="210" alt="image" src="https://github.com/user-attachments/assets/b1276e4a-e6ea-441f-a402-06cb6b268608" />
+
+## Local setup
+
+### Backend
+1. Navigate to the root directory.
+2. Create a virtual environment: `python -m venv venv` & `source venv/bin/activate`
+3. Install dependencies: `pip install -r requirements.txt`
+4. Create a `.env` file with `DATABASE_URL` and `SECRET_KEY`.
+5. Run the server: `python run.py`
+
+### Frontend
+1. Navigate to `/frontend`.
+2. Install dependencies: `npm install`
+3. Start the dev server: `npm run dev`
 
 ## Roadmap
 
@@ -63,9 +81,9 @@ The project is managed as a Mono-repo to streamline development.
 * [x] Implement APScheduler for background interval monitoring (1min/5min checks).
 * [x] Visualize historical latency data with Recharts.
 * [x] Add timeline selection to charts.
-* [ ] Implement settings menu.
-* [ ] Implement profile page.
+* [x] Implement settings menu.
 * [ ] Administration tools for user and endpoint monitoring.
+
 
 
 
