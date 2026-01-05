@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { RotateLoader } from "react-spinners";
-import { IoClose, IoRefresh } from "react-icons/io5";
+import { IoClose, IoRefresh, IoPulse } from "react-icons/io5";
 import toast from 'react-hot-toast';
 import Header from "../ui/Title";
-import Button from "../ui/Button";
-import { getEndpointStats } from "../../services/endpointService";
+import { getEndpointStats, runUrl } from "../../services/endpointService";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { useTheme } from '../../context/ThemeContext';
 
 const backdropVariants = {
     hidden: { opacity: 0 },
@@ -27,6 +25,10 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
     const [endDate, setEndDate] = useState("");
     const [refreshing, setRefreshing] = useState(false);
 
+    const [isPinging, setIsPinging] = useState(false);
+    const [lastPingTime, setLastPingTime] = useState(0);
+    const COOLDOWN_TIME = 30000
+
     const loadAnalytics = async (isManualRefresh = false) => {
         if (isManualRefresh) setRefreshing(true);
         else setLoading(true);
@@ -45,7 +47,28 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
         }
     };
 
-    const handleRefresh = () => loadAnalytics(true);
+    const handleRefresh = () => loadAnalytics(true)
+
+    const runManualCheck = async () => {
+        const now = Date.now();
+        if (now - lastPingTime < COOLDOWN_TIME) {
+            const remaining = Math.ceil((COOLDOWN_TIME - (now - lastPingTime)) / 1000);
+            toast.error(`Wait ${remaining}s before checking again.`);
+            return;
+        }
+
+        setIsPinging(true);
+        try {
+            await runUrl(endpoint_id);
+            setLastPingTime(Date.now());
+            await loadAnalytics(true);
+            toast.success("Check ran successfully!");
+        } catch(err) {
+            toast.error("Manual check failed.");
+        } finally {
+            setIsPinging(false);
+        }
+    }
 
     useEffect(() => {
         if (endpoint_id) loadAnalytics();
@@ -124,6 +147,17 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="absolute top-4 right-4 flex flex-col sm:flex-row gap-2">
+                    <button 
+                        onClick={runManualCheck}
+                        disabled={loading || refreshing || isPinging}
+                        className="order-2 sm:order-2 p-2 text-emerald-400 hover:text-emerald-300 hover:bg-white/10 rounded-full transition-all active:scale-90 disabled:opacity-30"
+                        title="Run Manual Ping"
+                    >
+                        <IoPulse
+                            size={22} 
+                            className={isPinging ? "animate-pulse" : ""} 
+                        />
+                    </button>
                     <button 
                         onClick={onClose}
                         className="order-1 sm:order-2 p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all"
