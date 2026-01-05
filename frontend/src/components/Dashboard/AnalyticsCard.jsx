@@ -82,8 +82,8 @@ export default function AnalyticsCard({ endpoint, liveStats, onDelete }) {
                 <span className="
                     col-start-1 row-start-1 w-full
                     transition-all duration-300 ease-in-out
-                    opacity-100 translate-y-0
-                    group-hover:opacity-0 group-hover:translate-y-2 group-hover:pointer-events-none"
+                    opacity-0 md:opacity-100 translate-y-2 md:translate-y-0
+                    md:group-hover:opacity-0 md:group-hover:translate-y-2 md:group-hover:pointer-events-none"
                 >
                     {hasStats ? (
                         <div className={`flex flex-col gap-1 ${currentStyle.text}`}>
@@ -103,19 +103,21 @@ export default function AnalyticsCard({ endpoint, liveStats, onDelete }) {
                 <div className="
                     col-start-1 row-start-1 w-full flex flex-col justify-end gap-2
                     transition-all duration-300 ease-in-out
-                    opacity-0 translate-y-2
-                    group-hover:opacity-100 group-hover:translate-y-0"
+                    opacity-100 translate-y-0
+                    md:opacity-0 md:translate-y-2
+                    md:group-hover:opacity-100 md:group-hover:translate-y-0"
                 >
                     <div className='flex flex-col text-white'>
-                        <span className='hidden md:flex text-sm'>See full analysis</span>
-                        <span className="hidden md:flex text-[10px] opacity-70 truncate">{endpoint.url}</span>
+                        <span className='hidden md:flex text-sm font-bold'>See full analysis</span>
+                        <span className="text-[10px] opacity-70 truncate">{endpoint.url}</span>
                     </div>
-                    <div className='flex justify-end'>
+                    <div className='flex justify-end mt-1'>
                         <Button 
                             onClick={handleDelete}
-                            className="bg-red-500/10 border border-red-500/20 text-red-200 hover:bg-red-500/20"
+                            disabled={loading}
+                            className="bg-red-500/20 border border-red-500/40 text-red-200 hover:bg-red-500/40 p-2"
                         >
-                            <HiMiniTrash />
+                            {loading ? <BeatLoader color="#fca5a5" size={4} /> : <HiMiniTrash size={18} />}
                         </Button>
                     </div> 
                 </div>
