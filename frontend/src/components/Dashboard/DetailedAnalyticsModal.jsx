@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { RotateLoader } from "react-spinners";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoRefresh } from "react-icons/io5";
 import toast from 'react-hot-toast';
 import Header from "../ui/Title";
+import Button from "../ui/Button";
 import { getEndpointStats } from "../../services/endpointService";
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { useTheme } from '../../context/ThemeContext';
@@ -24,23 +25,29 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
     const [stats, setStats] = useState(null);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    const { theme, toggleTheme } = useTheme()
+    const [refreshing, setRefreshing] = useState(false);
+
+    const loadAnalytics = async (isManualRefresh = false) => {
+        if (isManualRefresh) setRefreshing(true);
+        else setLoading(true);
+
+        try {
+            const response = await getEndpointStats(endpoint_id, startDate, endDate, 500);
+            setHistory(response.data.history || []);
+            setStats(response.data);
+            if (isManualRefresh) toast.success("Refreshed successfully.");
+        } catch (error) {
+            toast.error("Failed to load stats.");
+            if (!isManualRefresh) onClose();
+        } finally {
+            setLoading(false);
+            setRefreshing(false);
+        }
+    };
+
+    const handleRefresh = () => loadAnalytics(true);
 
     useEffect(() => {
-        const loadAnalytics = async () => {
-            setLoading(true);
-            try {
-                const response = await getEndpointStats(endpoint_id, startDate, endDate, 500);
-                setHistory(response.data.history || []);
-                setStats(response.data);
-            } catch(error) {
-                toast.error("Failed to load stats.");
-                onClose();
-            } finally {
-                setLoading(false);
-            }
-        }
-        
         if (endpoint_id) loadAnalytics();
     }, [endpoint_id, startDate, endDate]);
 
@@ -54,6 +61,13 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
             month: 'short', 
             day: 'numeric' 
         });
+    };
+
+    const isMultiDay = formattedData.length > 1 && 
+    (new Date(formattedData[formattedData.length - 1].timestamp) - new Date(formattedData[0].timestamp)) > 24 * 60 * 60 * 1000;
+
+    const dynamicTickFormatter = (value) => {
+        return isMultiDay ? formatDate(value) : formatTime(value);
     };
 
     const formatTime = (dateStr) => {
@@ -97,7 +111,7 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
 
     return (
         <motion.div 
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-md p-2"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-md p-4"
             variants={backdropVariants}
             initial="hidden"
             animate="visible"
@@ -105,23 +119,37 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
             onClick={onClose}
         >
             <motion.div 
-                className="relative dark:bg-none dark:bg-slate-900/50 w-full max-w-2xl bg-gradient-to-br from-emerald-900/25 to-violet-900/25 backdrop-blur-xl border border-white/20 rounded-2xl p-8 shadow-2xl"
+                className="relative dark:bg-slate-900/30 w-full max-w-2xl bg-slate-900/15 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl overflow-hidden"
                 variants={modalVariants}
                 onClick={(e) => e.stopPropagation()}
             >
-                <button 
-                    onClick={onClose}
-                    className="absolute top-4 right-4 text-white/70 hover:text-white transition-colors"
-                >
-                    <IoClose size={24} />
-                </button>
+                <div className="absolute top-4 right-4 flex flex-col sm:flex-row gap-2">
+                    <button 
+                        onClick={onClose}
+                        className="order-1 sm:order-2 p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all"
+                    >
+                        <IoClose size={24} />
+                    </button>
+                    <button 
+                        onClick={handleRefresh}
+                        disabled={loading || refreshing}
+                        className="order-2 sm:order-1 p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-full transition-all active:scale-90 disabled:opacity-30"
+                    >
+                        <IoRefresh 
+                            size={22} 
+                            className={refreshing ? "animate-spin" : ""} 
+                        />
+                    </button>
+                </div>
 
-                <div className="mb-6 text-center">
-                    <Header className="text-white text-2xl font-bold">
+                <div className="mb-6 text-center pr-10 pl-10"> 
+                    <Header className="text-white text-xl font-bold">
                         {stats?.endpoint_name || "Analytics"}
                     </Header>
                     {stats?.endpoint_url && (
-                        <p className="text-white/50 text-xs mt-1">{stats.endpoint_url}</p>
+                        <p className="text-white/40 text-[10px] break-all mt-0.5 mx-auto">
+                            {stats.endpoint_url}
+                        </p>
                     )}
                 </div>
 
@@ -130,11 +158,11 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
                         <RotateLoader color={goodColor} size={10} />
                     </div>
                 ) : (
-                    <div className="flex flex-col w-full min-w-0">
+                    <div className="flex flex-col w-full text-white">
                         <div className="h-64 w-full">
                             {formattedData.length > 0 ? (
-                                <ResponsiveContainer width="100%" height="100%" minWidth={0}>
-                                    <LineChart data={formattedData}>
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <LineChart data={formattedData} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
                                         <defs>
                                             <linearGradient id="splitColor" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset={off} stopColor={badColor} stopOpacity={1} />
@@ -144,93 +172,84 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
 
                                         <XAxis 
                                             dataKey="timestamp" 
-                                            stroke={axisColor} 
-                                            opacity={0.5} 
-                                            tick={{fontSize: 12}}
-                                            minTickGap={30}
-                                            tickFormatter={formatDate} 
+                                            stroke={axisColor}
+                                            opacity={0.3}
+                                            tick={{ fontSize: 10 }}
+                                            tickLine={false}
+                                            axisLine={false}
+                                            minTickGap={40}
+                                            tickFormatter={dynamicTickFormatter} 
+                                            dy={10}
                                         />
-                                        <YAxis stroke={axisColor} opacity={0.5} tick={{fontSize: 12}} width={40}/>
+                                        
+                                        <YAxis 
+                                            stroke={axisColor} 
+                                            opacity={0.3} 
+                                            tick={{ fontSize: 10 }} 
+                                            tickLine={false}
+                                            axisLine={false}
+                                        />
                                         
                                         <Tooltip 
                                             contentStyle={{ 
-                                                backgroundColor: 'rgba(0, 0, 0, 0.8)', 
+                                                backgroundColor: 'rgba(15, 23, 42, 0.9)', 
                                                 border: '1px solid rgba(255, 255, 255, 0.1)',
-                                                borderRadius: '8px',
+                                                borderRadius: '12px',
+                                                fontSize: '12px',
                                                 color: '#fff'
                                             }}
+                                            labelFormatter={(label) => `${formatDate(label)} ${formatTime(label)}`}
                                             itemStyle={{ color: '#fff' }}
-                                            labelStyle={{ color: '#ccc', marginBottom: '4px' }}
-                                            labelFormatter={formatTime}
                                         />
+
                                         <Line 
                                             type="monotone" 
                                             dataKey="latency" 
                                             stroke="url(#splitColor)" 
                                             strokeWidth={3}
                                             dot={false}
-                                            activeDot={{ r: 6, stroke: 'white', strokeWidth: 2 }}
+                                            activeDot={{ r: 4, fill: '#fff', strokeWidth: 0 }}
+                                            animationDuration={1000}
                                         />
                                     </LineChart>
                                 </ResponsiveContainer>
                             ) : (
-                                <div className="flex h-full items-center justify-center text-white/50">
-                                    No data available for this period.
+                                <div className="flex h-full items-center justify-center text-white/30 text-sm italic">
+                                    No data available.
                                 </div>
                             )}
-                            
-                            <div className="flex flex-row justify-center text-white mt-2 text-center text-sm gap-2">
-                                Uptime: {stats.uptime}%
-                            </div>
-                            
-                            <div 
-                                className="mt-6 w-full bg-black/5 border border-white/10 rounded-xl p-4 backdrop-blur-md"
-                                onTouchStart={(e) => e.stopPropagation()}
-                            >
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div className="flex flex-col">
-                                        <label 
-                                            htmlFor="start" 
-                                            className="text-[10px] text-white/50 uppercase font-bold tracking-wider mb-1.5 ml-1"
-                                        >
-                                            From
-                                        </label>
-                                        <input
-                                            type="date"
-                                            id="start"
-                                            name="date-start"
-                                            value={startDate}
-                                            onChange={(e) => setStartDate(e.target.value)}
-                                            className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-emerald-400/50 focus:bg-black/30 focus:ring-1 focus:ring-emerald-400/20 transition-all min-h-[44px] cursor-pointer"
-                                            style={{ colorScheme: "dark" }}
-                                            onClick={(e) => e.stopPropagation()}
-                                        />
-                                    </div>
+                        </div>
 
-                                    <div className="flex flex-col">
-                                        <label 
-                                            htmlFor="end" 
-                                            className="text-[10px] text-white/50 uppercase font-bold tracking-wider mb-1.5 ml-1"
-                                        >
-                                            To
-                                        </label>
-                                        <input
-                                            type="date"
-                                            id="end"
-                                            name="date-end" 
-                                            value={endDate}
-                                            onChange={(e) => setEndDate(e.target.value)}
-                                            className="w-full bg-black/20 border border-white/10 rounded-lg px-3 py-2 text-white text-sm outline-none focus:border-violet-400/50 focus:bg-black/30 focus:ring-1 focus:ring-violet-400/20 transition-all min-h-[44px] cursor-pointer"
-                                            style={{ colorScheme: "dark" }}
-                                            onClick={(e) => e.stopPropagation()}
-                                        />
-                                    </div>
-                                </div>
+                        <div className="flex justify-between items-center text-white/60 text-[11px] mt-4 px-1 uppercase tracking-widest font-bold">
+                            <span>latency tracking</span>
+                            <span className="text-emerald-400">Uptime: {stats?.uptime}%</span>
+                        </div>
+                        
+                        <div className="mt-4 grid grid-cols-2 gap-3 bg-white/5 p-3 rounded-2xl border border-white/5">
+                            <div className="flex flex-col">
+                                <span className="text-[9px] text-white/40 uppercase mb-1 ml-1">From</span>
+                                <input
+                                    type="date"
+                                    value={startDate}
+                                    onChange={(e) => setStartDate(e.target.value)}
+                                    className="bg-transparent text-white text-xs outline-none cursor-pointer"
+                                    style={{ colorScheme: "dark" }}
+                                />
+                            </div>
+                            <div className="flex flex-col border-l border-white/10 pl-3">
+                                <span className="text-[9px] text-white/40 uppercase mb-1 ml-1">To</span>
+                                <input
+                                    type="date"
+                                    value={endDate}
+                                    onChange={(e) => setEndDate(e.target.value)}
+                                    className="bg-transparent text-white text-xs outline-none cursor-pointer"
+                                    style={{ colorScheme: "dark" }}
+                                />
                             </div>
                         </div>
-                </div>
+                    </div>
                 )}
             </motion.div>
         </motion.div>
     );
-};
+}
