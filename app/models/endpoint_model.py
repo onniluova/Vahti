@@ -8,7 +8,7 @@ class EndpointModel:
         cur = conn.cursor()
         try:
 
-            cur.execute("SELECT id FROM endpoints WHERE name=%s AND url=%s", (name, url))
+            cur.execute("SELECT id FROM endpoints WHERE name=%s AND url=%s AND user_id=%s", (name, url, user_id))
             if cur.fetchone():
                 return None
 
