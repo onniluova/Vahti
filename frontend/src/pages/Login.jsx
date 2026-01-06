@@ -166,7 +166,6 @@ const Login = () => {
                         </label>
                         <Input
                             placeholder="Enter your username" 
-                            className="bg-gray-50 focus:bg-white transition-colors"
                             onChange={(e) => setUsername(e.target.value)}
                         />
                     </div>
@@ -178,7 +177,6 @@ const Login = () => {
                         <Input 
                             type="password"
                             placeholder="••••••••" 
-                            className="bg-gray-50 focus:bg-white transition-colors"
                             onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>

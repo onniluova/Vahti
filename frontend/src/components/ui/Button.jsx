@@ -4,7 +4,7 @@ export default function Button({ children, onClick, className = "", variant = "g
     
     const variants = {
         glass: "bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/10 text-white shadow-lg",
-        solid: "bg-white text-black hover:bg-gray-200 shadow-lg border border-transparent",
+        solid: "w-full bg-white/90 text-gray-700 hover:bg-gray-100 border border-gray-200 flex items-center justify-center gap-2",
         ghost: "bg-transparent hover:bg-white/10 text-white/70 hover:text-white border border-transparent",
         danger: "bg-red-500/10 hover:bg-red-500/20 text-red-200 border border-red-500/20"
     };
