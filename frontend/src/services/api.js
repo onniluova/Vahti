@@ -29,6 +29,7 @@ api.interceptors.response.use(
 
         if (originalRequest.url.includes("/auth/refresh")) {
             localStorage.clear();
+            window.location.href = "/";
             return Promise.reject(error);
         }
 
@@ -46,7 +47,6 @@ api.interceptors.response.use(
 
             } catch (refreshError) {
                 localStorage.clear();
-                window.location.href = "/";
                 return Promise.reject(refreshError);
             }
         }
