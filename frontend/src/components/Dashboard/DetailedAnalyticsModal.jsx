@@ -101,12 +101,6 @@ export default function DetailedAnalyticsModal({ onClose, endpoint_id }) {
         });
     };
 
-    useEffect(() => {
-        if (formattedData.length > 0) {
-            console.log("Formatted Data:", formattedData);
-        }
-    }, [formattedData]);
-
     const getGradientOffset = () => {
         if (formattedData.length === 0) return 0;
         

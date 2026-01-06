@@ -164,7 +164,7 @@ const Login = () => {
                         <label className="block text-xs font-medium text-white mb-1 ml-1">
                             Username
                         </label>
-                        <Input 
+                        <Input
                             placeholder="Enter your username" 
                             className="bg-gray-50 focus:bg-white transition-colors"
                             onChange={(e) => setUsername(e.target.value)}
@@ -184,9 +184,12 @@ const Login = () => {
                     </div>
 
                     <div className="mt-4 flex flex-col gap-3">
-                        <Button onClick={handleLoginClick} disabled={loading}
-                            className="w-full py-3 text-white border border-gray-200 shadow-slate-500/30 hover:bg-slate-200 hover:text-gray-500"
-                        >
+                            <Button 
+                                onClick={handleLoginClick} 
+                                disabled={loading}
+                                variant="solid"
+                                className="w-full py-3"
+                            >
                             {loading ? (
                                 <BeatLoader color="white" loading={loading} size={8} margin={2} />
                             ) : (
@@ -194,8 +197,11 @@ const Login = () => {
                             )}
                         </Button>
 
-                        <Button onClick={handleRegisterClick} disabled={loading} 
-                            className="w-full text-white border border-gray-200 hover:bg-slate-200 hover:text-gray-500 shadow-none"
+                        <Button
+                            onClick={handleRegisterClick} 
+                            disabled={loading}
+                            variant="solid"
+                            className="w-full py-3"
                         >
                             {loading ? (
                                 <BeatLoader color="white" loading={loading} size={5} margin={2} />

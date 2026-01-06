@@ -39,7 +39,6 @@ class AuthModel:
         finally:
             cur.close()
             conn.close()
-
     
     @staticmethod
     def create_user(u_name, u_pass):
@@ -124,7 +123,7 @@ class AuthModel:
             conn = get_db_connection()
             cur = conn.cursor(cursor_factory=RealDictCursor)
 
-            cur.execute("SELECT id, username, role FROM users WHERE google_id = %s;", (google_id,))
+            cur.execute("SELECT id, username, role, settings FROM users WHERE google_id = %s;", (google_id,))
             user = cur.fetchone()
 
             if user:

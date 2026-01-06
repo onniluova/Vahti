@@ -1,7 +1,7 @@
 import Input from "../ui/Input"
 import Button from "../ui/Button"
 
-const MonitoringTab = ({ settings, handleChange, handleSave, loading }) => {
+const MonitoringTab = ({ settings, handleChange }) => {
     return (
         <div className="flex flex-col h-full">
             <h3 className="text-xl font-bold text-white mb-4">Monitoring Logic</h3>

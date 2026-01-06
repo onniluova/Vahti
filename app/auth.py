@@ -51,7 +51,7 @@ def tokenRequired(f):
             }
         
         except Exception as e:
-            return jsonify({'error': 'Token on viallinen tai vanhentunut'}), 401
+            return jsonify({'error': 'Token is missing'}), 401
 
         return f(current_user, *args, **kwargs)
     return decorated

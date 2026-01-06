@@ -6,7 +6,8 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState({
     user_id: null,
     username: '',
-    role: ''
+    role: '',
+    settings: {},
   })
 
   useEffect(() => {
