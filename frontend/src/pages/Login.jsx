@@ -185,7 +185,6 @@ const Login = () => {
                             <Button 
                                 onClick={handleLoginClick} 
                                 disabled={loading}
-                                variant="solid"
                                 className="w-full py-3"
                             >
                             {loading ? (
@@ -198,7 +197,6 @@ const Login = () => {
                         <Button
                             onClick={handleRegisterClick} 
                             disabled={loading}
-                            variant="solid"
                             className="w-full py-3"
                         >
                             {loading ? (
@@ -216,7 +214,6 @@ const Login = () => {
 
                         <Button 
                             onClick={handleGoogleClick}
-                            className="w-full bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 flex items-center justify-center gap-2"
                         >
                             <img 
                                 src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" 
