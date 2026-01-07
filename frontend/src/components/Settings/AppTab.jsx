@@ -22,13 +22,6 @@ export default function AppTab({ settings, theme, toggleTheme }) {
                         <div className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${settings.autoRefreshDashboard ? 'translate-x-6' : 'translate-x-0'}`} />
                     </button>
                 </div>
-                
-                <div className="flex items-center justify-between p-2 opacity-50">
-                    <span className="text-white text-sm">Email Alerts</span>
-                    <div className="w-12 h-6 rounded-full p-1 bg-slate-600">
-                        <div className="bg-white w-4 h-4 rounded-full shadow-md" />
-                    </div>
-                </div>
             </div>
         </div>
     )
