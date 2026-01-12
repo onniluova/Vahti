@@ -44,7 +44,7 @@ jobs:
       - name: Run Playwright tests
         run: |
           # Asenna työkalu odottamiseen
-          npx wait-on http://127.0.0.1:5173 --timeout 50000
+          npx wait-on http://127.0.0.1:4173 --timeout 50000
           python pw_tests/test_login.py
         env:
           BASE_URL: http://127.0.0.1:4173
