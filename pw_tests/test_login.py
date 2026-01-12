@@ -5,7 +5,14 @@ from pages.login_page import LoginPage
 
 async def test_successful_login():
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=False, slow_mo=1000)
+        is_ci = os.getenv("CI") == "true"
+        
+        # Asetetaan headless: True jos ollaan CI:ssä, muuten False
+        browser = await p.chromium.launch(
+            headless=is_ci, 
+            slow_mo=0 if is_ci else 1000
+        )
+        
         page = await browser.new_page()
 
         # 1. Mockataan kirjautuminen
