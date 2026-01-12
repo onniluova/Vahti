@@ -24,7 +24,7 @@ jobs:
         working-directory: ./frontend
         run: | 
           npm run build
-          npm run preview &
+          npx vite preview --port 4173 --host 127.0.0.1 &
         
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -43,6 +43,7 @@ jobs:
 
       - name: Run Playwright tests
         run: |
+          curl -v http://127.0.0.1:4173 || echo "Palvelin ei vastaa vielä"
           # Asenna työkalu odottamiseen
           npx wait-on http://127.0.0.1:4173 --timeout 50000
           python pw_tests/test_login.py
