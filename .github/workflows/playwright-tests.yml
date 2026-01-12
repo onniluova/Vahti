@@ -47,7 +47,7 @@ jobs:
           npx wait-on http://127.0.0.1:5173 --timeout 50000
           python pw_tests/test_login.py
         env:
-          BASE_URL: http://127.0.0.1:5173
+          BASE_URL: http://127.0.0.1:4173
           APP_USERNAME: ${{ secrets.APP_USERNAME }}
           APP_PASSWORD: ${{ secrets.APP_PASSWORD }}
           CI: true
