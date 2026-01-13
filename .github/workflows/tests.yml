@@ -39,6 +39,7 @@ jobs:
         working-directory: ./frontend
         env:
           VITE_API_URL: "http://127.0.0.1:5000"
+          VITE_GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
         run: | 
           npm run build
           npx vite preview --port 4173 --host 127.0.0.1 &
