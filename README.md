@@ -2,7 +2,7 @@
 
 Vahti is a custom API monitoring tool designed to track endpoint availability and performance.
 
-This project was built to demonstrate a full production pipeline: from a Python backend to a deployed cloud architecture using Render and Vercel.
+This project was built to demonstrate a full production pipeline: from a Python backend to a deployed cloud architecture using Render and Vercel. Latest update: Added E2E + integration tests into Github actions pipeline.
 
 ## Live Demo
 
@@ -83,6 +83,7 @@ The project is managed as a Mono-repo to streamline development.
 * [x] Add timeline selection to charts.
 * [x] Implement settings menu.
 * [ ] Administration tools for user and endpoint monitoring.
+
 
 
 
