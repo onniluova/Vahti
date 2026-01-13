@@ -1,4 +1,4 @@
-from playwright.async_api import Page, expect
+from playwright.sync_api import Page, expect
 import os
 from dotenv import load_dotenv
 
@@ -11,25 +11,25 @@ class LoginPage:
         self.password_input = page.get_by_placeholder("••••••••")
         self.sign_in_button = page.get_by_role("button", name="Sign In", exact=True)
     
-    async def navigate(self):
-        base_url = os.getenv("BASE_URL", "http://127.0.0.1:4173/")
-        await self.page.goto(base_url)
+    def navigate(self):
+        base_url = os.getenv("BASE_URL", "http://127.0.0.1:5173/")
+        self.page.goto(base_url)
 
-    async def fill(self):
+    def fill(self):
         user = os.getenv("APP_USERNAME")
         password = os.getenv("APP_PASSWORD")
 
         if not user or not password:
             raise ValueError("Ympäristömuuttujat APP_USERNAME tai APP_PASSWORD puuttuvat!")
 
-        await self.username_input.wait_for(state="visible", timeout=15000)
+        self.username_input.wait_for(state="visible", timeout=15000)
 
-        await self.username_input.fill(user)
+        self.username_input.fill(user)
 
         # Lisätty varmistus: painikkeen pitää olla vakaa ennen klikkausta
-        await expect(self.sign_in_button).to_be_visible()
+        expect(self.sign_in_button).to_be_visible()
 
-        await self.password_input.fill(password)
+        self.password_input.fill(password)
 
-    async def sign_in(self):
-        await self.sign_in_button.click()
+    def sign_in(self):
+        self.sign_in_button.click()
