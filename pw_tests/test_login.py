@@ -16,6 +16,10 @@ async def test_successful_login():
         
         page = await browser.new_page()
 
+        page.on("console", lambda msg: print(f"BROWSER CONSOLE: {msg.text}"))
+
+        page.on("pageerror", lambda exc: print(f"BROWSER CRASH: {exc}"))
+
         # 1. Mockataan kirjautuminen
         await page.route("**/auth/login", lambda route: route.fulfill(
             status=200,
