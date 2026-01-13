@@ -34,9 +34,6 @@ def app_instance():
          supports_credentials=True, 
          allow_headers=["Content-Type", "Authorization"]
     )
-
-    with app.app_context():
-        init_db_pool()
     
     from app.routes.auth_routes import auth_bp
     from app.routes.endpoint_routes import endpoints_bp
