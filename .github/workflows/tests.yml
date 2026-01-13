@@ -6,10 +6,25 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest # Käytetään standardia CI-ympäristöä
+  backend-unit-tests:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4 # Haetaan koodi repositoriosta
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      - name: Run Pytests (with Mocking)
+        run: python -m pytest -v -s pytests/
+
+  playwright-e2e:
+    needs: backend-unit-tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -54,7 +69,7 @@ jobs:
           CI: true
 
       - name: Upload Test Report
-        if: always() # Ajetaan vaikka testit epäonnistuisivat
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: playwright-report
