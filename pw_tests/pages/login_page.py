@@ -3,7 +3,6 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()
-base_url = os.getenv("BASE_URL", "http://127.0.0.1:5173")
 
 class LoginPage:
     def __init__(self, page):
@@ -13,6 +12,7 @@ class LoginPage:
         self.sign_in_button = page.get_by_role("button", name="Sign In", exact=True)
     
     async def navigate(self):
+        base_url = os.getenv("BASE_URL", "http://127.0.0.1:5173")
         await self.page.goto(base_url)
 
     async def fill(self):

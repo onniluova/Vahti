@@ -36,10 +36,16 @@ async def test_successful_login():
 
         lg = LoginPage(page)
         await lg.navigate()
+
+        # Odotetaan, että sivu latautuu kokonaan
+        await page.wait_for_load_state("networkidle")
+
         await lg.fill()
+
+        # Lisätty varmistus: painikkeen pitää olla vakaa ennen klikkausta
+        await expect(page.get_by_role("button", name="Sign In", exact=True)).to_be_visible()
         await lg.sign_in()
 
-        # Varmistus: Nyt frontin pitäisi päästä dashboardille
         await expect(page).to_have_url(re.compile(r".*/dashboard"), timeout=10000)
         
         await browser.close()
