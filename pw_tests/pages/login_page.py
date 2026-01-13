@@ -1,4 +1,4 @@
-from playwright.async_api import Page
+from playwright.async_api import Page, expect
 import os
 from dotenv import load_dotenv
 
@@ -22,7 +22,13 @@ class LoginPage:
         if not user or not password:
             raise ValueError("Ympäristömuuttujat APP_USERNAME tai APP_PASSWORD puuttuvat!")
 
+        await self.username_input.wait_for(state="visible", timeout=15000)
+
         await self.username_input.fill(user)
+
+        # Lisätty varmistus: painikkeen pitää olla vakaa ennen klikkausta
+        await expect(self.sign_in_button).to_be_visible()
+
         await self.password_input.fill(password)
 
     async def sign_in(self):

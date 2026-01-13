@@ -44,14 +44,8 @@ async def test_successful_login():
         # Odotetaan, että sivu latautuu kokonaan
         await page.wait_for_load_state("networkidle")
 
-        # Varmistetaan vielä, että username input field on kokonaan ladannut.
-        username_field = page.get_by_placeholder("Enter your username")
-        await username_field.wait_for(state="visible", timeout=15000)
-
         await lg.fill()
 
-        # Lisätty varmistus: painikkeen pitää olla vakaa ennen klikkausta
-        await expect(page.get_by_role("button", name="Sign In", exact=True)).to_be_visible()
         await lg.sign_in()
 
         await expect(page).to_have_url(re.compile(r".*/dashboard"), timeout=10000)
