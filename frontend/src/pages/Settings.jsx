@@ -75,6 +75,8 @@ const Settings = () => {
         { id: 'account', label: 'Account' }
     ];
 
+    const animationStyle= "animate-in fade-in slide-in-from-left-4 duration-300"
+
     return (
         <div className="flex flex-col min-h-screen bg-gradient-to-br from-emerald-700 to-violet-700 dark:bg-none dark:bg-slate-900">
             <BackgroundGrid></BackgroundGrid>
@@ -101,7 +103,7 @@ const Settings = () => {
                                 onClick={() => setActiveTab(tab.id)}
                                 className={`
                                     py-4 text-sm font-medium transition-colors duration-200 outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-400
-                                    ${activeTab === tab.id 
+                                    ${activeTab === tab.id
                                         ? 'bg-white/10 text-white border-b-2 border-emerald-400' 
                                         : 'text-white/60 hover:bg-white/5 hover:text-white'
                                     }
@@ -115,13 +117,13 @@ const Settings = () => {
                     <div className="p-6 flex-grow overflow-y-auto custom-scrollbar relative">
                         
                         {activeTab === 'profile' && (
-                            <div className="animate-in fade-in slide-in-from-left-4 duration-300">
+                            <div className={animationStyle}>
                                 <ProfileTab currentUser={user} />
                             </div>
                         )}
 
                         {activeTab === 'monitoring' && (
-                            <div className="animate-in fade-in slide-in-from-left-4 duration-300">
+                            <div className={animationStyle}>
                                 <MonitoringTab
                                     settings={settings}
                                     handleChange={handleChange}
@@ -130,7 +132,7 @@ const Settings = () => {
                         )}
 
                         {activeTab === 'app' && (
-                            <div className="animate-in fade-in slide-in-from-left-4 duration-300">
+                            <div className={animationStyle}>
                                 <AppTab
                                     settings={settings}
                                     theme={theme}
@@ -140,7 +142,7 @@ const Settings = () => {
                         )}
 
                         {activeTab === 'account' && (
-                            <div className="animate-in fade-in slide-in-from-left-4 duration-300">
+                            <div className={animationStyle}>
                                 <AccountTab user={user} />
                             </div>
                         )}
@@ -150,7 +152,8 @@ const Settings = () => {
                         <Button 
                             onClick={handleSave}
                             disabled={loading}
-                            className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                            variant='glass'
+                            className='!bg-emerald-400/65'
                         >
                             {loading ? 'Saving...' : 'Save Changes'}
                         </Button>
