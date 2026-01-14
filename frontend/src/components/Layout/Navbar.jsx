@@ -8,7 +8,7 @@ import { logoutAuth } from "../../services/authService";
 
 export default function Navbar({ children, className = "", ...props }) {
     let navigate = useNavigate();
-    const { user, setUser } = useContext(UserContext);
+    const { setUser } = useContext(UserContext);
 
     const handleLogoutClick = async () => {
         try {
